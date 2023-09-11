@@ -2,6 +2,7 @@
 
 import { UploadDropzone } from "@/lib/uploadthing";
 import "@uploadthing/react/styles.css";
+import { X } from "lucide-react";
 import Image from "next/image";
 
 interface FileUploadProps {
@@ -23,6 +24,13 @@ const FileUpload: React.FC<FileUploadProps> = ({
     return (
       <div className="relative h-24 w-24">
         <Image fill src={value} alt="uploaded image" className="rounded-lg" />
+        <button
+          onClick={() => onChange("")}
+          className="bg-rose-500 absolute -top-1 -right-1 rounded-full text-white shadow-sm"
+          type="button"
+        >
+          <X className="h-4 w-4" />
+        </button>
       </div>
     );
   }

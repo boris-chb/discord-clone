@@ -18,7 +18,7 @@ export default async function Home() {
     },
   });
 
-  if (server) return redirect(`/servers/${server.id}`);
+  if (server) return redirect(`/server/${server.id}`);
 
   return (
     <div className="text-3xl">
