@@ -29,7 +29,7 @@ export default function RootLayout({
         >
           <ModalProvider />
           <body className={cn(inter.className, "bg-white dark:bg-stone-800")}>
-            <div className="hidden md:flex h-full w-[74px] z-30 flex-col fixed inset-y-0">
+            <div className="hidden md:flex h-full w-16 z-30 flex-col fixed inset-y-0">
               <Sidebar />
             </div>
             {children}

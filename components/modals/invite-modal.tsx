@@ -30,7 +30,7 @@ export default function InviteModal() {
 
   const origin = useOrigin();
 
-  const inviteUrl = `${origin}/invite/${server?.inviteCode}`;
+  const inviteUrl = `${origin}/join/${server?.inviteCode}`;
 
   const isModalOpen = isOpen && type === "inviteMember";
 

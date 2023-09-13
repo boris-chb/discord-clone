@@ -39,11 +39,14 @@ const formSchema = z.object({
   }),
 });
 
-export default function CreateServerModal() {
+export default function EditServerModal() {
   const router = useRouter();
-  const { isOpen, onClose, type } = useModal();
-
-  const isModalOpen = isOpen && type === "createServer";
+  const {
+    isOpen,
+    onClose,
+    type,
+    data: { server },
+  } = useModal();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -53,11 +56,20 @@ export default function CreateServerModal() {
     },
   });
 
+  useEffect(() => {
+    if (server) {
+      form.setValue("name", server.name);
+      form.setValue("imageUrl", server.imageUrl);
+    }
+  }, [server, form]);
+
+  const isModalOpen = isOpen && type === "editServer";
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    if (!server) return;
     try {
-      await axios.post("/api/server", values);
+      await axios.patch(`/api/server/${server.id}`, values);
       form.reset();
       router.refresh();
       onClose();
@@ -128,7 +140,7 @@ export default function CreateServerModal() {
             </div>
             <DialogFooter className="bg-gray-100 px-6 py-4">
               <Button variant={"primary"} disabled={isLoading}>
-                Create
+                Save
               </Button>
             </DialogFooter>
           </form>
