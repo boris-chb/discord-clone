@@ -4,13 +4,15 @@ import { Separator } from "@/components/ui/separator";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { getCurrentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
-import { UserButton } from "@clerk/nextjs";
+import { RedirectToSignIn, UserButton, redirectToSignIn } from "@clerk/nextjs";
 import SidebarAction from "./sidebar-action";
 
 interface SidebarProps {}
 
 const Sidebar: React.FC<SidebarProps> = async () => {
   const profile = await getCurrentProfile();
+
+  if (!profile) return <RedirectToSignIn />;
 
   const servers = await db.server.findMany({
     where: {

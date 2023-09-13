@@ -34,7 +34,7 @@ export default async function ServerLayout({
 
   return (
     <div className="h-full pl-14">
-      <div className="h-full p-2 w-60 bg-green-500 fixed">
+      <div className="h-full p-2 w-60 fixed">
         <ServerSidebar serverId={params.serverId} />
       </div>
       <main className="ml-60 border-4 border-red-500 h-full w-full">
