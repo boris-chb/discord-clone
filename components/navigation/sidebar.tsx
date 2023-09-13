@@ -1,25 +1,24 @@
+import SidebarItem from "@/components/navigation/sidebar-item";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { getCurrentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
-import { redirect } from "next/navigation";
-import SidebarAction from "./sidebar-action";
-import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import SidebarItem from "@/components/navigation/sidebar-item";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { UserButton } from "@clerk/nextjs";
+import SidebarAction from "./sidebar-action";
 
 interface SidebarProps {}
 
 const Sidebar: React.FC<SidebarProps> = async () => {
   const profile = await getCurrentProfile();
 
-  if (!profile) return redirect("/");
-
   const servers = await db.server.findMany({
     where: {
       members: {
         some: {
-          profileId: profile.id,
+          // we always have a profile since we go through set up on '/'
+          // if they don't have one, we always create it, profile can't be null!
+          profileId: profile!.id,
         },
       },
     },
