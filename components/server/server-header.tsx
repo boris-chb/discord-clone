@@ -7,6 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useModal } from "@/hooks/use-modal-store";
 import { MemberRole } from "@prisma/client";
 import {
   ChevronDown,
@@ -24,6 +25,7 @@ interface ServerHeaderProps {
 }
 
 const ServerHeader: React.FC<ServerHeaderProps> = ({ server, role }) => {
+  const { onOpen } = useModal();
   const isAdmin = role === MemberRole.ADMIN;
   const isModerator = isAdmin;
 
@@ -37,7 +39,10 @@ const ServerHeader: React.FC<ServerHeaderProps> = ({ server, role }) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 text-xs font-medium text-black dark:text-neutral-400 space-y-1">
         {isModerator && (
-          <DropdownMenuItem className="text-indigo-600 dark:text-indigo-400 px-3 py-2 text-sm cursor-pointer ">
+          <DropdownMenuItem
+            onClick={() => onOpen("inviteMember", { server })}
+            className="text-indigo-600 dark:text-indigo-400 px-3 py-2 text-sm cursor-pointer "
+          >
             Invite Members
             <UserPlus className="h-4 w-4 ml-auto" />
           </DropdownMenuItem>
