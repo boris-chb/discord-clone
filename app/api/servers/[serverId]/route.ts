@@ -28,3 +28,25 @@ export async function PATCH(
     return new NextResponse("Could not edit server", { status: 500 });
   }
 }
+
+export async function DELETE(
+  req: NextRequest,
+  { params: { serverId } }: { params: { serverId: string } }
+) {
+  try {
+    // TODO validation check
+    const profile = await getCurrentProfile();
+    if (!profile) return new NextResponse("Unauthorized", { status: 401 });
+
+    const server = await db.server.delete({
+      where: {
+        id: serverId,
+        profileId: profile.id,
+      },
+    });
+
+    return NextResponse.json(server);
+  } catch (error) {
+    console.log(error);
+  }
+}

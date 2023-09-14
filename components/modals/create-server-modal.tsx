@@ -22,15 +22,14 @@ import {
 
 import FileUpload from "@/components/file-upload";
 
+import { useModal } from "@/hooks/use-modal-store";
+import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Input } from "../ui/input";
-import { cn } from "@/lib/utils";
-import axios from "axios";
-import { useRouter } from "next/navigation";
-import { useModal } from "@/hooks/use-modal-store";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Server name is required." }),
@@ -57,7 +56,7 @@ export default function CreateServerModal() {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.post("/api/server", values);
+      await axios.post("/api/servers", values);
       form.reset();
       router.refresh();
       onClose();
