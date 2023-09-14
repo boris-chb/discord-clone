@@ -56,25 +56,26 @@ export default function EditServerModal() {
     },
   });
 
+  const isModalOpen = isOpen && type === "editServer";
+  const isLoading = form.formState.isSubmitting;
+
   useEffect(() => {
     if (server) {
       form.setValue("name", server.name);
       form.setValue("imageUrl", server.imageUrl);
     }
-  }, [server, form]);
-
-  const isModalOpen = isOpen && type === "editServer";
-  const isLoading = form.formState.isSubmitting;
+  }, [server, form, isModalOpen]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    if (!server) return;
+    // if (!server) return;
     try {
-      await axios.patch(`/api/server/${server.id}`, values);
+      await axios.patch(`/api/servers/${server?.id}`, values);
       form.reset();
       router.refresh();
-      onClose();
     } catch (e) {
       console.log(e);
+    } finally {
+      onClose();
     }
   };
 
@@ -85,7 +86,7 @@ export default function EditServerModal() {
 
   return (
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
-      <DialogContent className="bg-white text-black p-0 overflow-hidden">
+      <DialogContent className="bg-white text-black overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">
             Set up your server
