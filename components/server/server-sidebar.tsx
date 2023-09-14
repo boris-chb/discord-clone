@@ -60,6 +60,9 @@ export default async function ServerSidebar({ serverId }: ServerSidebarProps) {
   return (
     <div className="flex flex-col h-full text-primary w-full dark:bg-zinc-800 bg-zinc-200">
       <ServerHeader server={server} role={role} />
+      {textChannels.map(channel => (
+        <div key={channel.name}>{channel.name}</div>
+      ))}
     </div>
   );
 }

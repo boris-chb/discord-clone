@@ -8,5 +8,8 @@
     "**/Thumbs.db": true,
     "node_modules": true
   },
-  "explorerExclude.backup": {}
+  "explorerExclude.backup": {},
+  "typescript.preferences.autoImportFileExcludePatterns": [
+    "/**/node_modules/@radix-ui/*"
+  ]
 }
