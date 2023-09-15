@@ -33,7 +33,7 @@ export default async function ServerLayout({
   if (!server) return redirect("/");
 
   return (
-    <div className="h-full pl-16">
+    <div className="h-full md:pl-16">
       <div className="h-full w-60 fixed">
         <ServerSidebar serverId={params.serverId} />
       </div>

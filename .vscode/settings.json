@@ -10,6 +10,7 @@
   },
   "explorerExclude.backup": {},
   "typescript.preferences.autoImportFileExcludePatterns": [
-    "/**/node_modules/@radix-ui/*"
+    "/**/node_modules/@radix-ui/*",
+    "/**/node_modules/cmdk/*"
   ]
 }

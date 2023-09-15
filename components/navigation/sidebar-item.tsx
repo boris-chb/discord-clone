@@ -38,7 +38,12 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ id, imageUrl, name }) => {
             params?.serverId === id && "bg-primary/10 text-primary rounded-lg"
           )}
         >
-          <Image fill src={imageUrl} alt="server" />
+          <Image
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            fill
+            src={imageUrl}
+            alt="server"
+          />
         </div>
       </button>
     </SidebarTooltip>

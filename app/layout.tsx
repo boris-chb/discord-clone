@@ -21,10 +21,10 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html lang="en">
+      <html suppressHydrationWarning lang="en">
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           storageKey="discord-theme"
         >
           <ModalProvider />
