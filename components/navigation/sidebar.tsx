@@ -30,7 +30,7 @@ const Sidebar: React.FC<SidebarProps> = async () => {
     <nav className="space-y-4 py-3 flex flex-col items-center h-full text-primary w-full dark:bg-zinc-950">
       <SidebarAction />
       <Separator className="w-3/4 bg-zinc-300 dark:bg-zinc-700 mx-auto" />
-      <ScrollArea className="flex-1 w-full my-3">
+      <ScrollArea className="flex-1 w-full h-full my-3">
         <div className="flex flex-col gap-3">
           {servers.map(server => (
             <SidebarItem

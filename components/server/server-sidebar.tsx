@@ -1,6 +1,10 @@
+import Channel from "@/components/server/channel";
+import Member from "@/components/server/member";
 import ServerHeader from "@/components/server/server-header";
 import ServerSearch from "@/components/server/server-search";
+import ServerSection from "@/components/server/server-section";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 import { getCurrentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
 import { RedirectToSignIn, redirectToSignIn } from "@clerk/nextjs";
@@ -27,6 +31,7 @@ const roleIconMap = {
 
 export default async function ServerSidebar({ serverId }: ServerSidebarProps) {
   const currentUserProfile = await getCurrentProfile();
+
   if (!currentUserProfile) return <RedirectToSignIn />;
 
   const server = await db.server.findUnique({
@@ -74,7 +79,7 @@ export default async function ServerSidebar({ serverId }: ServerSidebarProps) {
   )?.role;
 
   return (
-    <div className="flex flex-col h-full text-primary w-full dark:bg-zinc-800 bg-zinc-200">
+    <div className="flex flex-col p-2 h-full text-primary w-full dark:bg-zinc-800 bg-zinc-200">
       <ServerHeader server={server} role={role} />
       <ScrollArea>
         <div className="mt-2">
@@ -120,9 +125,74 @@ export default async function ServerSidebar({ serverId }: ServerSidebarProps) {
           />
         </div>
       </ScrollArea>
-      {textChannels.map(channel => (
-        <div key={`${channel.name}-${Math.random()}`}>{channel.name}</div>
-      ))}
+      <Separator className="rounded-md my-2 bg-zinc-200" />
+      {!!textChannels.length && (
+        <div className="mb-2 ">
+          <ServerSection
+            sectionType="channels"
+            channelType={ChannelType.TEXT}
+            role={role}
+            label="Text Channels"
+          />
+          {textChannels.map(channel => (
+            <Channel
+              key={channel.id}
+              channel={channel}
+              server={server}
+              role={role}
+            />
+          ))}
+        </div>
+      )}
+      {!!audioChannels.length && (
+        <div className="mb-2 ">
+          <ServerSection
+            sectionType="channels"
+            channelType={ChannelType.AUDIO}
+            role={role}
+            label="Voice Channels"
+          />
+          {audioChannels.map(channel => (
+            <Channel
+              key={channel.id}
+              channel={channel}
+              server={server}
+              role={role}
+            />
+          ))}
+        </div>
+      )}
+      {!!videoChannels.length && (
+        <div className="mb-2">
+          <ServerSection
+            sectionType="channels"
+            channelType={ChannelType.VIDEO}
+            role={role}
+            label="Video Channels"
+          />
+          {videoChannels.map(channel => (
+            <Channel
+              key={channel.id}
+              channel={channel}
+              server={server}
+              role={role}
+            />
+          ))}
+        </div>
+      )}
+      {!!members.length && (
+        <div className="mb-2">
+          <ServerSection
+            sectionType="members"
+            role={role}
+            label="Members"
+            server={server}
+          />
+          {members.map(member => (
+            <Member key={member.id} member={member} server={server} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
