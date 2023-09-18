@@ -27,7 +27,7 @@ const Sidebar: React.FC<SidebarProps> = async () => {
   });
 
   return (
-    <nav className="space-y-4 py-3 flex flex-col items-center h-full text-primary w-full dark:bg-zinc-950">
+    <nav className="space-y-4 py-3 flex flex-col items-center h-full text-primary w-full dark:bg-zinc-950 bg-zinc-200">
       <SidebarAction />
       <Separator className="w-3/4 bg-zinc-300 dark:bg-zinc-700 mx-auto" />
       <ScrollArea className="flex-1 w-full h-full my-3">

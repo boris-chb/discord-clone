@@ -2,6 +2,7 @@ import { getCurrentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
 import { MemberRole } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import { v4 } from "uuid";
 
 export async function POST(req: NextRequest) {
   try {
@@ -29,6 +30,7 @@ export async function POST(req: NextRequest) {
       data: {
         channels: {
           create: {
+            id: v4().slice(0, 8),
             profileId: profile.id,
             name,
             type,

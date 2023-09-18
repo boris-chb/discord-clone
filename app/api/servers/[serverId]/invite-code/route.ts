@@ -20,7 +20,7 @@ export async function PATCH(
         profileId: profile.id,
       },
       data: {
-        inviteCode: uuidv4(),
+        inviteCode: uuidv4().slice(0, 8),
       },
     });
 

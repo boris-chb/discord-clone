@@ -7,7 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { getCurrentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
-import { RedirectToSignIn, redirectToSignIn } from "@clerk/nextjs";
+import { RedirectToSignIn } from "@clerk/nextjs";
 import { ChannelType, MemberRole } from "@prisma/client";
 import { Hash, Mic, ShieldAlert, ShieldCheck, Video } from "lucide-react";
 
@@ -79,7 +79,7 @@ export default async function ServerSidebar({ serverId }: ServerSidebarProps) {
   )?.role;
 
   return (
-    <div className="flex flex-col p-2 h-full text-primary w-full dark:bg-zinc-800 bg-zinc-200">
+    <div className="flex flex-col p-2 h-full text-primary w-full dark:bg-zinc-800 bg-zinc-100">
       <ServerHeader server={server} role={role} />
       <ScrollArea>
         <div className="mt-2">

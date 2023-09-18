@@ -12,10 +12,12 @@ import {
 
 import { useModal } from "@/hooks/use-modal-store";
 import axios from "axios";
+
 import { useRouter } from "next/navigation";
+import queryString from "query-string";
 import { useState } from "react";
 
-export default function DeleteServerModal() {
+export default function DeleteChannelModal() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -23,21 +25,27 @@ export default function DeleteServerModal() {
     isOpen,
     onClose,
     type,
-    data: { server },
+    data: { server, channel },
   } = useModal();
 
-  const isModalOpen = isOpen && type === "deleteServer";
+  const isModalOpen = isOpen && type === "deleteChannel";
 
-  const onDeleteServer = async () => {
+  const onDeleteChannel = async () => {
     try {
       setIsLoading(true);
-      await axios.delete(`/api/servers/${server?.id}/`);
+
+      const url = queryString.stringifyUrl({
+        url: `/api/channels/${channel?.id}`,
+        query: { serverId: server?.id },
+      });
+
+      await axios.delete(url);
 
       onClose();
       router.refresh();
-      router.push("/");
+      router.push(`/${server?.id}`);
     } catch (error) {
-      console.log("could not delete server", server?.id, error);
+      console.log(`could not delete channel ${channel?.name}`, error);
     } finally {
       setIsLoading(false);
     }
@@ -52,9 +60,9 @@ export default function DeleteServerModal() {
           </DialogTitle>
 
           <DialogDescription className="text-center">
-            You&apos;re about to delete server «
-            <span className="text-indigo-500">{server?.name}</span>». This
-            action cannot be undone!
+            You&apos;re about to delete «
+            <span className="text-indigo-500">#{channel?.name}</span>» channel.
+            This action cannot be undone!
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="bg-gray-100 px-6 py-4">
@@ -69,7 +77,7 @@ export default function DeleteServerModal() {
             <Button
               disabled={isLoading}
               variant={"destructive"}
-              onClick={onDeleteServer}
+              onClick={onDeleteChannel}
             >
               Delete
             </Button>
