@@ -60,8 +60,8 @@ export default function DeleteChannelModal() {
           </DialogTitle>
 
           <DialogDescription className="text-center">
-            You&apos;re about to delete «
-            <span className="text-indigo-500">#{channel?.name}</span>» channel.
+            You&apos;re about to delete
+            <span className="text-indigo-500">#{channel?.name}</span> channel.
             This action cannot be undone!
           </DialogDescription>
         </DialogHeader>

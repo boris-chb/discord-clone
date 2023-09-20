@@ -55,6 +55,13 @@ model Member {
   serverId String
   server Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
 
+  messages Message[]
+  directMessages DirectMessage[]
+
+  chatsCreated Chat[] @relation("FirstChatMember")
+  chatsJoined Chat[] @relation("SecondChatMember")
+
+
   @@index([profileId])
   @@index([serverId])
 
@@ -78,9 +85,75 @@ model Channel {
   serverId String
   server Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
 
+  messages Message[]
+
   @@index([profileId])
   @@index([serverId])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Message {
+  id String @id @default(uuid())
+  body String @db.Text
+
+  fileUrl String? @db.Text
+
+  memberId String
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  channelId String
+  channel Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
+  deleted Boolean @default(false)
+
+  @@index([channelId])
+  @@index([memberId])
+}
+
+
+model Chat {
+  id       String  @id @default(uuid())
+
+  firstMember  Member  @relation("FirstChatMember", fields: [firstMemberId], references: [id])
+  firstMemberId String
+
+  secondMember  Member  @relation("SecondChatMember", fields: [secondMemberId], references: [id])
+  secondMemberId String
+  
+  directMessages DirectMessage[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
+  @@index([firstMemberId])
+  @@index([secondMemberId])
+  @@unique([firstMemberId, secondMemberId])
+}
+
+model DirectMessage {
+  id String @id @default(uuid())
+  body String @db.Text
+  fileUrl String? @db.Text
+
+  memberId String
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  chatId String
+  chat Chat @relation(fields: [chatId], references: [id],onDelete: Cascade)
+
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  deleted Boolean @default(false)
+
+  @@index([memberId])
+  @@index([chatId])
+  
 }

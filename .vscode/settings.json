@@ -12,6 +12,6 @@
   "typescript.preferences.autoImportFileExcludePatterns": [
     "/**/node_modules/@radix-ui/*",
     "/**/node_modules/cmdk/*",
-    "/**/node:*/*"
+    "/**/node_modules/next/dist/*"
   ]
 }
