@@ -7,6 +7,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
+import { SocketProvider } from "@/components/providers/socket-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -27,16 +28,18 @@ export default function RootLayout({
           defaultTheme="dark"
           storageKey="discord-theme"
         >
-          <ModalProvider />
-          <body className={cn(inter.className, "bg-white dark:bg-stone-800")}>
-            <Toaster />
-            <div className="h-full">
-              <div className="invisible md:visible md:flex h-full w-[80px] z-30 flex-col fixed inset-y-0">
-                <Sidebar />T
+          <SocketProvider>
+            <ModalProvider />
+            <body className={cn(inter.className, "bg-white dark:bg-stone-800")}>
+              <Toaster />
+              <div className="h-full">
+                <div className="invisible md:visible md:flex h-full w-[80px] z-30 flex-col fixed inset-y-0">
+                  <Sidebar />T
+                </div>
+                <main className="md:pl-[80px] h-full">{children}</main>
               </div>
-              <main className="md:pl-[80px] h-full">{children}</main>
-            </div>
-          </body>
+            </body>
+          </SocketProvider>
         </ThemeProvider>
       </html>
     </ClerkProvider>

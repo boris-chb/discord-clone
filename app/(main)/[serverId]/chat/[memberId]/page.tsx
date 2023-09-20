@@ -49,7 +49,7 @@ export default async function ChatPage({
         serverId={serverId}
         type="chat"
       />
-      {searchParams.video && <>media room</>}
+      {searchParams.video ? <>media room</> : <></>}
     </div>
   );
 }

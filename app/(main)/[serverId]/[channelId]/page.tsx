@@ -1,4 +1,5 @@
 import ChatHeader from "@/components/chat/chat-header";
+import ChatInput from "@/components/chat/chat-input";
 import { getCurrentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
@@ -31,6 +32,17 @@ export default async function ChannelPage({
   return (
     <div className="flex flex-col h-full bg-white dark:bg-zinc-950">
       <ChatHeader name={channel.name} type="channel" serverId={serverId} />
+
+      <div className="flex-1">Future messages</div>
+      <ChatInput
+        name={channel.name}
+        type="channel"
+        apiUrl="/api/socket/messages"
+        query={{
+          channelId,
+          serverId,
+        }}
+      />
     </div>
   );
 }
