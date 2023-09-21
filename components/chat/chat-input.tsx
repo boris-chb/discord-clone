@@ -7,7 +7,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { Plus, Smile } from "lucide-react";
 import queryString from "query-string";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 

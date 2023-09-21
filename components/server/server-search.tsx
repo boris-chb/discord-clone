@@ -42,9 +42,9 @@ const ServerSearch: React.FC<ServerSearchProps> = ({ data }) => {
     setIsDialogOpen(false);
 
     if (type === "member") {
-      return router.push(`/servers/${params.serverId}/chat/${id}`);
+      return router.push(`/servers/${params?.serverId}/chat/${id}`);
     } else if (type === "channel") {
-      return router.push(`/servers/${params.serverId}/${id}`);
+      return router.push(`/servers/${params?.serverId}/${id}`);
     }
   };
 

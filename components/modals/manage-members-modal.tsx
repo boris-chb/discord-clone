@@ -38,7 +38,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import qs from "query-string";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const roleIconMap = {
   GUEST: null,
@@ -54,6 +54,10 @@ export default function ManageMembersModal() {
   const { server } = data as { server: ServerWithMembersWithProfiles };
 
   const isModalOpen = isOpen && type === "manageMembers";
+
+  useEffect(() => {
+    console.log("manage members modal rendered");
+  }, []);
 
   const onChangeRole = async (memberId: string, role: MemberRole) => {
     try {
