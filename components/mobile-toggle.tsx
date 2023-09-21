@@ -16,7 +16,7 @@ export default function MobileToggle({ serverId }: MobileToggleProps) {
           <Menu />
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="p-0 flex gap-0">
+      <SheetContent side="left" className="p-0 flex gap-0 w-72 bg-red-200">
         <div className="w-[80px]">
           <Sidebar />
         </div>
