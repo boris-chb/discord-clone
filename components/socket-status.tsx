@@ -17,7 +17,7 @@ export default function SocketStatus({}: SocketStatusProps) {
       )}
       variant="outline"
     >
-      {isConnected ? "Live" : "Reconnecting"}
+      {isConnected ? "Connected" : "Reconnecting"}
     </Badge>
   );
 }

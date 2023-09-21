@@ -1,8 +1,10 @@
 "use client";
 
+import ChatItem from "@/components/chat/chat-item";
 import { useChatQuery } from "@/hooks/use-chat-query";
-import { Member } from "@prisma/client";
-import { ElementRef, useRef } from "react";
+import type { Member, Message, Profile } from "@prisma/client";
+import { ElementRef, Fragment, useRef } from "react";
+import { format } from "date-fns";
 
 interface ChatMessagesProps {
   name: string;
@@ -15,6 +17,14 @@ interface ChatMessagesProps {
   paramValue: string;
   type: "channel" | "chat";
 }
+
+type _Message = Message & {
+  member: Member & {
+    profile: Profile;
+  };
+};
+
+const DATE_FORMAT = "d MMM yyyy, HH:mm";
 
 export default function ChatMessages({
   apiUrl,
@@ -49,10 +59,34 @@ export default function ChatMessages({
     paramValue,
   });
 
-  console.log(data);
+  if (isLoading) return <div className="w-full h-full">Loading</div>;
+  if (isError) return <div className="w-full h-full">Error</div>;
 
-  if (isLoading) return <>Loading</>;
-  if (isError) return <>Error</>;
+  return (
+    <div className="flex-1 flex flex-col py-4 overflow-y-auto">
+      {/* perform checks for pagination (infinite scroll) */}
 
-  return <div className="h-full">{JSON.stringify(data)}</div>;
+      <div className="flex flex-col-reverse mt-auto">
+        {data?.pages.map((group, i) => (
+          <Fragment key={i}>
+            {group.items.map((message: _Message) => (
+              <ChatItem
+                key={message.id}
+                id={message.id}
+                currentMember={member}
+                member={message.member}
+                body={message.body}
+                fileUrl={message.fileUrl}
+                deleted={message.deleted}
+                timestamp={format(new Date(message.createdAt), DATE_FORMAT)}
+                isUpdated={message.updatedAt !== message.createdAt}
+                socketUrl={socketUrl}
+                socketQuery={socketQuery}
+              />
+            ))}
+          </Fragment>
+        ))}
+      </div>
+    </div>
+  );
 }

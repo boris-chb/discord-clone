@@ -1,7 +1,7 @@
 "use client";
 
 import { Plus } from "lucide-react";
-import SidebarTooltip from "./sidebar-tooltip";
+import ActionTooltip from "./sidebar-tooltip";
 import { useModal } from "@/hooks/use-modal-store";
 
 interface SidebarItemProps {}
@@ -10,7 +10,7 @@ const SidebarAction: React.FC<SidebarItemProps> = () => {
   const { onOpen } = useModal();
   return (
     <>
-      <SidebarTooltip label="Create a server" side="right" align="center">
+      <ActionTooltip label="Create a server" side="right" align="center">
         <button
           onClick={() => onOpen("createServer")}
           className="group flex items-center"
@@ -22,7 +22,7 @@ const SidebarAction: React.FC<SidebarItemProps> = () => {
             />
           </div>
         </button>
-      </SidebarTooltip>
+      </ActionTooltip>
     </>
   );
 };

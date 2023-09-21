@@ -18,16 +18,22 @@ export const useChatQuery = ({
   const { isConnected } = useSocket();
 
   const fetchMessages = async ({ pageParam = undefined }) => {
+    /*
+     /api/messages?channelId={channelId}&cursor=pageParam
+     */
+
     const url = queryString.stringifyUrl(
       {
-        url: apiUrl,
+        url: apiUrl, // /api/messages
         query: {
-          cursoor: pageParam,
-          [paramKey]: paramValue,
+          cursor: pageParam, // &cursor=pageParam
+          [paramKey]: paramValue, // ?channelId={channelId}
         },
       },
       { skipNull: true }
     );
+
+    console.log(url);
 
     const res = await fetch(url);
     return res.json();

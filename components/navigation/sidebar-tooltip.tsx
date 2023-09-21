@@ -7,14 +7,14 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-interface SidebarTooltipProps {
+interface ActionTooltipProps {
   label: string;
   children: React.ReactNode;
   side?: "top" | "right" | "bottom" | "left";
   align?: "start" | "center" | "end";
 }
 
-const SidebarTooltip: React.FC<SidebarTooltipProps> = ({
+const ActionTooltip: React.FC<ActionTooltipProps> = ({
   children,
   label,
   align,
@@ -32,4 +32,4 @@ const SidebarTooltip: React.FC<SidebarTooltipProps> = ({
   );
 };
 
-export default SidebarTooltip;
+export default ActionTooltip;

@@ -35,13 +35,12 @@ export default async function ServerLayout({
 
   return (
     <div className="h-full">
-      <div className="fixed top-1 md:invisible">
+      <div className="fixed top-1 md:hidden">
         <MobileSidebar serverId={params.serverId} />
       </div>
-      <div className="invisible md:visible md:flex h-full w-60 z-20 flex-col fixed inset-y-0">
+      <div className="hidden md:flex h-full w-60 z-20 flex-col fixed inset-y-0">
         <ServerSidebar serverId={params.serverId} />
       </div>
-
       <main className="h-full md:pl-60">{children}</main>
     </div>
   );

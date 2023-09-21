@@ -1,6 +1,6 @@
 "use client";
 
-import SidebarTooltip from "@/components/navigation/sidebar-tooltip";
+import ActionTooltip from "@/components/navigation/sidebar-tooltip";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
@@ -20,7 +20,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ id, imageUrl, name }) => {
   };
 
   return (
-    <SidebarTooltip side="right" align="center" label={name}>
+    <ActionTooltip side="right" align="center" label={name}>
       <button
         // onClick={handleClick}
         className="group relative flex items-center"
@@ -46,7 +46,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ id, imageUrl, name }) => {
           />
         </div>
       </button>
-    </SidebarTooltip>
+    </ActionTooltip>
   );
 };
 

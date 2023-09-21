@@ -1,6 +1,6 @@
 "use client";
 
-import SidebarTooltip from "@/components/navigation/sidebar-tooltip";
+import ActionTooltip from "@/components/navigation/sidebar-tooltip";
 import { ModalType, useModal } from "@/hooks/use-modal-store";
 import { cn } from "@/lib/utils";
 import { Channel, ChannelType, MemberRole } from "@prisma/client";
@@ -55,18 +55,18 @@ export default function Channel({ channel, role, server }: ChannelProps) {
       </p>
       {channel.name !== "general" && role !== MemberRole.GUEST && (
         <div className="flex ml-auto items-center gap-2">
-          <SidebarTooltip label="Edit">
+          <ActionTooltip label="Edit">
             <Edit
               onClick={e => handleAction(e, "editChannel")}
               className="hidden group-hover:block w-3 h-3 text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 transition"
             />
-          </SidebarTooltip>
-          <SidebarTooltip label="Delete">
+          </ActionTooltip>
+          <ActionTooltip label="Delete">
             <Trash
               onClick={e => handleAction(e, "deleteChannel")}
               className="hidden group-hover:block w-3 h-3 text-zinc-500 hover:text-rose-600 dark:text-zinc-400 dark:hover:text-rose-300 transition"
             />
-          </SidebarTooltip>
+          </ActionTooltip>
         </div>
       )}
       {channel.name === "general" && (

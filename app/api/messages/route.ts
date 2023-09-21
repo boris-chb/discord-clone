@@ -11,6 +11,7 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
 
     const cursor = searchParams.get("cursor");
+    console.log(cursor);
 
     const channelId = searchParams.get("channelId");
 
@@ -25,6 +26,7 @@ export async function GET(req: NextRequest) {
         },
         where: {
           channelId: channelId!,
+          member: { profile: { id: profile!.id } },
         },
         include: {
           member: {

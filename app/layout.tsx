@@ -25,6 +25,8 @@ const ModalProvider = dynamic(
   }
 );
 
+export const runtime = "edge";
+
 export default function RootLayout({
   children,
 }: {
@@ -47,7 +49,7 @@ export default function RootLayout({
                 <Toaster />
 
                 <div className="h-full">
-                  <div className="invisible md:visible md:flex h-full w-[80px] z-30 flex-col fixed inset-y-0">
+                  <div className="hidden md:flex h-full w-[80px] z-30 flex-col fixed inset-y-0">
                     <Sidebar />
                   </div>
                   <main className="md:pl-[80px] h-full">{children}</main>

@@ -1,6 +1,6 @@
 "use client";
 
-import SidebarTooltip from "@/components/navigation/sidebar-tooltip";
+import ActionTooltip from "@/components/navigation/sidebar-tooltip";
 import { useModal } from "@/hooks/use-modal-store";
 import { ChannelType, MemberRole } from "@prisma/client";
 import { Plus, Settings } from "lucide-react";
@@ -29,24 +29,24 @@ const ServerSection: React.FC<ServerSectionProps> = ({
 
       {/* CREATE CHANNEL BUTTON */}
       {role !== MemberRole.GUEST && sectionType === "channels" && (
-        <SidebarTooltip label="Create Channel" side="top">
+        <ActionTooltip label="Create Channel" side="top">
           <button
             onClick={() => onOpen("createChannel", { channelType })}
             className="text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300"
           >
             <Plus className="h-4 w-4" />
           </button>
-        </SidebarTooltip>
+        </ActionTooltip>
       )}
       {role === MemberRole.ADMIN && sectionType === "members" && (
-        <SidebarTooltip label="Manage Members" side="top">
+        <ActionTooltip label="Manage Members" side="top">
           <button
             onClick={() => onOpen("manageMembers", { server })}
             className="text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300"
           >
             <Settings className="h-4 w-4" />
           </button>
-        </SidebarTooltip>
+        </ActionTooltip>
       )}
     </div>
   );
