@@ -4,8 +4,9 @@ import { Separator } from "@/components/ui/separator";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { getCurrentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
-import { RedirectToSignIn, UserButton, redirectToSignIn } from "@clerk/nextjs";
+import { RedirectToSignIn, UserButton } from "@clerk/nextjs";
 import SidebarAction from "./sidebar-action";
+import Link from "next/link";
 
 interface SidebarProps {}
 
@@ -24,6 +25,16 @@ const Sidebar: React.FC<SidebarProps> = async () => {
         },
       },
     },
+    include: {
+      channels: {
+        where: {
+          name: "general",
+        },
+        orderBy: {
+          createdAt: "asc",
+        },
+      },
+    },
   });
 
   return (
@@ -33,12 +44,17 @@ const Sidebar: React.FC<SidebarProps> = async () => {
       <ScrollArea className="flex-1 w-full h-full my-3">
         <div className="flex flex-col gap-3">
           {servers.map(server => (
-            <SidebarItem
+            <Link
               key={server.id}
-              id={server.id}
-              name={server.name}
-              imageUrl={server.imageUrl}
-            />
+              href={`/${server.id}/${server?.channels[0].id}`}
+            >
+              <SidebarItem
+                key={server.id}
+                id={server.id}
+                name={server.name}
+                imageUrl={server.imageUrl}
+              />
+            </Link>
           ))}
         </div>
       </ScrollArea>

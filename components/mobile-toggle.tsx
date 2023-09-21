@@ -4,11 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 
-interface MobileToggleProps {
+interface MobileSidebarProps {
   serverId: string;
 }
 
-export default function MobileToggle({ serverId }: MobileToggleProps) {
+export default function MobileSidebar({ serverId }: MobileSidebarProps) {
   return (
     <Sheet>
       <SheetTrigger asChild>

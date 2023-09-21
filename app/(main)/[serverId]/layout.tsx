@@ -1,3 +1,4 @@
+import MobileSidebar from "@/components/mobile-toggle";
 import ServerSidebar from "@/components/server/server-sidebar";
 import { getCurrentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
@@ -34,9 +35,13 @@ export default async function ServerLayout({
 
   return (
     <div className="h-full">
+      <div className="fixed top-1 md:invisible">
+        <MobileSidebar serverId={params.serverId} />
+      </div>
       <div className="invisible md:visible md:flex h-full w-60 z-20 flex-col fixed inset-y-0">
         <ServerSidebar serverId={params.serverId} />
       </div>
+
       <main className="h-full md:pl-60">{children}</main>
     </div>
   );
