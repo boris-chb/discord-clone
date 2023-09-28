@@ -42,7 +42,7 @@ export default async function ChatPage({
     firstMember.profileId === profile.id ? secondMember : firstMember;
 
   return (
-    <div className="bg-white dark:bg-zinc-900 flex flex-col h-full">
+    <div className="bg-white dark:bg-zinc-800 flex flex-col h-full">
       <ChatHeader
         imageUrl={interlocutor.profile.imageUrl}
         name={interlocutor.profile.name}

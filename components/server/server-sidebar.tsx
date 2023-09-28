@@ -79,7 +79,7 @@ export default async function ServerSidebar({ serverId }: ServerSidebarProps) {
   )?.role;
 
   return (
-    <div className="flex flex-col p-2 h-full text-primary w-full dark:bg-zinc-800 bg-zinc-100">
+    <div className="flex flex-col p-2 h-full text-primary w-full dark:bg-zinc-900 bg-zinc-100">
       <ServerHeader server={server} role={role} />
       <ScrollArea>
         <div className="mt-2">
