@@ -88,7 +88,7 @@ export default function ChatItem({
         {avatar}
         <div className="flex flex-col w-full">
           {/* SENDER & TIMESTAMP */}
-          <div className="flex items-center gap-x-2">
+          <div className="flex items-center gap-x-2 h-8">
             <div className="flex items-center">
               <Link
                 className="text-sm font-semibold hover:underline"
@@ -101,6 +101,24 @@ export default function ChatItem({
               </ActionTooltip>
             </div>
             <span className="text-xs">{timestamp}</span>
+            {canDeleteMessage && (
+              <div className="hidden group-hover:flex items-center ml-4 gap-x-2 p-1 bg-white dark:bg-zinc-800 border rounded-sm">
+                {canEditMessage && (
+                  <ActionTooltip label="Edit">
+                    <Edit
+                      onClick={() => setIsEditing(!isEditing)}
+                      className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
+                    />
+                  </ActionTooltip>
+                )}
+                <ActionTooltip label="Delete">
+                  <Trash
+                    onClick={() => onOpen("deleteChannel", {})}
+                    className="cursor-pointer ml-auto h-4 w-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
+                  />
+                </ActionTooltip>
+              </div>
+            )}
           </div>
           {isImage && <>img msg</>}
           {isPDF && <>pdf msg</>}
@@ -131,24 +149,6 @@ export default function ChatItem({
           )}
         </div>
       </div>
-      {canDeleteMessage && (
-        <div className="hidden group-hover:flex items-center gap-x-2 absolute p-1 -top-2 right-5 bg-white dark:bg-zinc-800 border rounded-sm">
-          {canEditMessage && (
-            <ActionTooltip label="Edit">
-              <Edit
-                onClick={() => setIsEditing(!isEditing)}
-                className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
-              />
-            </ActionTooltip>
-          )}
-          <ActionTooltip label="Delete">
-            <Trash
-              onClick={() => onOpen("deleteChannel", {})}
-              className="cursor-pointer ml-auto h-4 w-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
-            />
-          </ActionTooltip>
-        </div>
-      )}
     </div>
   );
 }
