@@ -1,6 +1,7 @@
 import ChatHeader from "@/components/chat/chat-header";
 import ChatInput from "@/components/chat/chat-input";
 import ChatMessages from "@/components/chat/chat-messages";
+import MediaRoom from "@/components/media-room";
 import { getCurrentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
@@ -33,31 +34,40 @@ export default async function ChannelPage({
   return (
     <div className="flex flex-col h-full bg-white dark:bg-zinc-800">
       <ChatHeader name={channel.name} type="channel" serverId={serverId} />
+      {channel.type === "TEXT" && (
+        <>
+          <ChatMessages
+            member={member}
+            name={channel.name}
+            chatId={channel.id}
+            type="channel"
+            apiUrl="/api/messages"
+            socketUrl="/api/socket/messages"
+            socketQuery={{
+              channelId,
+              serverId,
+            }}
+            paramKey="channelId"
+            paramValue={channelId}
+          />
 
-      <ChatMessages
-        member={member}
-        name={channel.name}
-        chatId={channel.id}
-        type="channel"
-        apiUrl="/api/messages"
-        socketUrl="/api/socket/messages"
-        socketQuery={{
-          channelId,
-          serverId,
-        }}
-        paramKey="channelId"
-        paramValue={channelId}
-      />
-
-      <ChatInput
-        name={channel.name}
-        type="channel"
-        apiUrl="/api/socket/messages"
-        query={{
-          channelId,
-          serverId,
-        }}
-      />
+          <ChatInput
+            name={channel.name}
+            type="channel"
+            apiUrl="/api/socket/messages"
+            query={{
+              channelId,
+              serverId,
+            }}
+          />
+        </>
+      )}
+      {channel.type === "AUDIO" && (
+        <MediaRoom chatId={channel.id} video={false} audio={true} />
+      )}
+      {channel.type === "VIDEO" && (
+        <MediaRoom chatId={channel.id} video={true} audio={true} />
+      )}
     </div>
   );
 }
