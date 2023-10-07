@@ -38,7 +38,7 @@ export default async function ChannelPage({
   if (!member || !channel) redirect("/");
 
   const messages = await db.message.findMany({
-    take: 10,
+    // take: 10,
     where: {
       channelId: channelId as string,
     },

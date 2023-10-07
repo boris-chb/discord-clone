@@ -22,9 +22,14 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    const socketClient = io(process.env.NEXT_PUBLIC_BACKEND_URL as string, {
-      addTrailingSlash: false,
-    });
+    const socketClient = io(
+      process.env.NEXT_PUBLIC_BACKEND_URL_PROD as string,
+      {
+        addTrailingSlash: false,
+      }
+    );
+
+    console.log(process.env.NEXT_PUBLIC_BACKEND_URL_PROD);
 
     socketClient?.on("connect", () => {
       setIsConnected(true);
