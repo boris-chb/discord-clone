@@ -13,8 +13,6 @@ import { z } from "zod";
 interface MessageEditFormProps {
   body: string;
   toggleEdit: (isEditing: boolean) => void;
-  socketQuery: Record<string, string>;
-  socketUrl: string;
   id: string;
 }
 const formSchema = z.object({
@@ -23,8 +21,6 @@ const formSchema = z.object({
 export default function MessageEditForm({
   body,
   toggleEdit,
-  socketQuery,
-  socketUrl,
   id,
 }: MessageEditFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -45,8 +41,7 @@ export default function MessageEditForm({
   const onEditMessage = async (values: z.infer<typeof formSchema>) => {
     try {
       const url = queryString.stringifyUrl({
-        url: `${socketUrl}/${id}`,
-        query: socketQuery,
+        url: `/api/messages`,
       });
 
       await axios.patch(url, values);

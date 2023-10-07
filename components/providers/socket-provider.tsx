@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { Socket, io } from "socket.io-client";
 
 type SocketContext = {
-  socket: any | null;
+  socket: Socket | null;
   isConnected: boolean;
 };
 
@@ -19,32 +19,39 @@ export const useSocket = () => {
 
 export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
-  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    const socketClient = io(process.env.NEXT_PUBLIC_SITE_URL as string, {
-      path: "/api/socket/io",
-      addTrailingSlash: false,
+    const socketClient = io(
+      process.env.NEXT_PUBLIC_BACKEND_URL_PROD as string,
+      {
+        addTrailingSlash: false,
+      }
+    );
+
+    socketClient?.on("connect", () => {
+      setSocket(socketClient);
+      console.log("client connected");
     });
 
-    console.log(socketClient);
-
-    socketClient.on("connect", () => {
-      console.log("connected");
-      setIsConnected(true);
+    socketClient?.on("disconnect", () => {
+      setSocket(null);
+      console.log("client disconnected");
     });
 
-    socketClient.on("disconnect", () => {
-      setIsConnected(false);
-    });
-
-    setSocket(socketClient);
-
-    return () => {};
+    return () => {
+      socketClient?.close();
+      setSocket(null);
+      console.log("client connection closed");
+    };
+    // eslint-disable-next-line
   }, []);
 
+  if (!socket) return <></>;
+
   return (
-    <SocketContext.Provider value={{ socket, isConnected }}>
+    <SocketContext.Provider
+      value={{ socket, isConnected: socket?.connected as boolean }}
+    >
       {children}
     </SocketContext.Provider>
   );

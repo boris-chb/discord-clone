@@ -15,16 +15,9 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ id, imageUrl, name }) => {
   const params = useParams();
   const router = useRouter();
 
-  const handleClick = () => {
-    router.push(`/${id}`);
-  };
-
   return (
     <ActionTooltip side="right" align="center" label={name}>
-      <button
-        // onClick={handleClick}
-        className="group relative flex items-center"
-      >
+      <button className="group relative flex items-center">
         <div
           className={cn(
             "absolute left-0 bg-primary rounded-r-2xl transition-all duration-300 w-[4px]",
@@ -43,6 +36,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ id, imageUrl, name }) => {
             fill
             src={imageUrl}
             alt="server"
+            className="dark:bg-zinc-800"
           />
         </div>
       </button>

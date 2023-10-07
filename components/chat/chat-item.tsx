@@ -25,8 +25,6 @@ interface ChatItemProps {
   deleted: boolean;
   currentMember: Member;
   isUpdated: boolean;
-  socketUrl: string;
-  socketQuery: Record<string, string>;
 }
 
 const roleIconMap = {
@@ -43,14 +41,11 @@ export default function ChatItem({
   id,
   isUpdated,
   member,
-  socketQuery,
-  socketUrl,
   timestamp,
 }: ChatItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const { onOpen } = useModal();
   const params = useParams();
-  const router = useRouter();
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -76,7 +71,7 @@ export default function ChatItem({
   ) : (
     <Link
       className="hover:drop-shadow-md transition"
-      href={`/${params?.serverId}/${member.id}`}
+      href={`/${params?.serverId}/chat/${member.id}`}
     >
       <UserAvatar src={member.profile.imageUrl} />
     </Link>
@@ -92,7 +87,7 @@ export default function ChatItem({
             <div className="flex items-center">
               <Link
                 className="text-sm font-semibold hover:underline"
-                href={`/${params?.serverId}/${member.id}`}
+                href={`/${params?.serverId}/chat/${member.id}`}
               >
                 {member.profile.name}
               </Link>
@@ -113,7 +108,7 @@ export default function ChatItem({
                 )}
                 <ActionTooltip label="Delete">
                   <Trash
-                    onClick={() => onOpen("deleteChannel", {})}
+                    onClick={() => onOpen("deleteMessage", {})}
                     className="cursor-pointer ml-auto h-4 w-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
                   />
                 </ActionTooltip>
@@ -139,13 +134,7 @@ export default function ChatItem({
             </p>
           )}
           {!fileUrl && isEditing && (
-            <MessageEditForm
-              id={id}
-              body={body}
-              toggleEdit={setIsEditing}
-              socketQuery={socketQuery}
-              socketUrl={socketUrl}
-            />
+            <MessageEditForm id={id} body={body} toggleEdit={setIsEditing} />
           )}
         </div>
       </div>

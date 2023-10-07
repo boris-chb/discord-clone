@@ -1,19 +1,23 @@
 "use client";
 
+import { useSocket } from "@/components/providers/socket-provider";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useChatStore } from "@/state/store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { Plus, Smile } from "lucide-react";
+import { ArrowRightCircle, Plus, Smile } from "lucide-react";
 import queryString from "query-string";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 interface ChatInputProps {
   apiUrl: string;
-  query: Record<string, any>;
   name: string;
+  serverId: string;
+  id: string;
   type: "chat" | "channel";
 }
 
@@ -24,9 +28,12 @@ const formSchema = z.object({
 export default function ChatInput({
   apiUrl,
   name,
-  query,
+  id,
+  serverId,
   type,
 }: ChatInputProps) {
+  const { socket } = useSocket();
+  const { addMessage, addDm } = useChatStore();
   const form = useForm<z.infer<typeof formSchema>>({
     defaultValues: {
       body: "",
@@ -34,17 +41,42 @@ export default function ChatInput({
     resolver: zodResolver(formSchema),
   });
 
-  const isLoading = form.formState.isSubmitting;
+  const roomId = `${type}:${id}`;
+
+  // join chat room
+  useEffect(() => {
+    socket?.emit("join-room", roomId);
+
+    return () => {
+      socket?.emit("leave-room", roomId);
+    };
+
+    //eslint-disable-next-line
+  }, [roomId]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const url = queryString.stringifyUrl({
         url: apiUrl,
-        query,
+        query: { serverId, channelId: id },
       });
 
-      await axios.post(url, values);
-      console.log(`chat input values, ${values}`);
+      form.reset();
+
+      const { data: message } = await axios.post(url, {
+        serverId,
+        chatId: id,
+        ...values,
+      });
+
+      if (type === "channel") {
+        addMessage(message);
+      } else if (type === "chat") {
+        addDm(message);
+      }
+
+      console.log("emitting message", message, roomId);
+      socket?.emit(`send-message`, { message, roomId });
     } catch (error) {
       console.log(error);
     }
@@ -52,11 +84,14 @@ export default function ChatInput({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        // action={}
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <FormField
           control={form.control}
           name="body"
-          render={({ field }) => (
+          render={({ field, formState }) => (
             <FormItem>
               <FormControl>
                 <div className="relative p-4 pb-6">
@@ -67,7 +102,8 @@ export default function ChatInput({
                     <Plus className="text-white dark:text-black" />
                   </Button>
                   <Input
-                    disabled={isLoading}
+                    autoComplete="off"
+                    disabled={formState.isLoading}
                     className="px-14 py-6 bg-zinc-200/90 dark:bg-zinc-700/75 border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-zinc-600 dark:text-zinc-200"
                     placeholder={`Message ${
                       type === "chat" ? name : "#" + name
@@ -75,7 +111,15 @@ export default function ChatInput({
                     {...field}
                   />
                   <div className="absolute top-7 right-8">
-                    <Smile />
+                    {field.value ? (
+                      <ArrowRightCircle
+                        size={28}
+                        className="text-indigo-400/80 cursor-pointer hover:text-indigo-600 transition"
+                        onClick={form.handleSubmit(onSubmit)}
+                      />
+                    ) : (
+                      <Smile />
+                    )}
                   </div>
                 </div>
               </FormControl>
