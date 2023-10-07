@@ -19,7 +19,6 @@ export const useSocket = () => {
 
 export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
-  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
     const socketClient = io(
@@ -29,16 +28,12 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       }
     );
 
-    console.log(process.env.NEXT_PUBLIC_BACKEND_URL_PROD);
-
     socketClient?.on("connect", () => {
-      setIsConnected(true);
       setSocket(socketClient);
       console.log("client connected");
     });
 
     socketClient?.on("disconnect", () => {
-      setIsConnected(false);
       setSocket(null);
       console.log("client disconnected");
     });
@@ -46,14 +41,17 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     return () => {
       socketClient?.close();
       setSocket(null);
-      setIsConnected(false);
       console.log("client connection closed");
     };
     // eslint-disable-next-line
   }, []);
 
+  if (!socket) return <></>;
+
   return (
-    <SocketContext.Provider value={{ socket, isConnected }}>
+    <SocketContext.Provider
+      value={{ socket, isConnected: socket?.connected as boolean }}
+    >
       {children}
     </SocketContext.Provider>
   );

@@ -42,6 +42,7 @@ export default function ChatInput({
   });
 
   const roomId = `${type}:${id}`;
+
   // join chat room
   useEffect(() => {
     socket?.emit("join-room", roomId);
@@ -51,7 +52,7 @@ export default function ChatInput({
     };
 
     //eslint-disable-next-line
-  }, []);
+  }, [roomId]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
@@ -68,13 +69,13 @@ export default function ChatInput({
         ...values,
       });
 
-      console.log(message);
-
       if (type === "channel") {
         addMessage(message);
       } else if (type === "chat") {
         addDm(message);
       }
+
+      console.log("emitting message", message, roomId);
       socket?.emit(`send-message`, { message, roomId });
     } catch (error) {
       console.log(error);

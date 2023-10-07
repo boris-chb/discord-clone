@@ -27,8 +27,6 @@ export default function ChatMessages({
   const { messages, setMessages, addMessage, addDm, dms, setDms } =
     useChatStore();
 
-  const chatMessages = type === "chat" ? dms : messages;
-
   useEffect(() => {
     if (type === "chat") {
       setDms(initialMessages as DirectMessage[]);
@@ -60,12 +58,12 @@ export default function ChatMessages({
     };
 
     //eslint-disable-next-line
-  }, [socket]);
+  }, []);
 
   const chatRef = useRef<ElementRef<"div">>(null);
   const bottomRef = useRef<ElementRef<"div">>(null);
 
-  if (chatMessages?.length === 0)
+  if (messages?.length === 0)
     return (
       <div className="h-full flex items-end justify-center">
         <p className="p-3 text-zinc-400 font-light">
@@ -78,10 +76,10 @@ export default function ChatMessages({
     <div className="flex-1 flex flex-col py-4 overflow-y-auto">
       {/* perform checks for pagination (infinite scroll) */}
       <div className="flex flex-col m-2">
-        {!chatMessages ? (
+        {!messages ? (
           <ChatItemSkeleton length={5} />
         ) : (
-          chatMessages.map(message => (
+          messages.map(message => (
             <ChatItem
               key={message.id}
               id={message.id}
