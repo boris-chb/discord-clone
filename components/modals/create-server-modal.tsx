@@ -30,6 +30,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Input } from "../ui/input";
+import { FileSpreadsheet } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Server name is required." }),
@@ -72,31 +73,40 @@ export default function CreateServerModal() {
 
   return (
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
-      <DialogContent className="bg-white p-0 text-black overflow-hidden">
-        <DialogHeader className="pt-8 px-6">
+      <DialogContent className="bg-white max-w-sm md:max-w-xl p-0 rounded-md text-black overflow-hidden">
+        <DialogHeader className="pt-8 px-6 flex flex-col items-center">
           <DialogTitle className="text-2xl text-center font-bold">
             Set up your server
           </DialogTitle>
           <DialogDescription>
-            Give your server a personality by choosing a name and cover image.
+            Choose a name & image for your server
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <div className="space-y-8 px-6">
-              <div className="flex items-center justify-center text-center">
+              <div className="flex  items-center justify-center text-center">
                 <FormField
                   control={form.control}
                   name="imageUrl"
-                  render={({ field }) => (
+                  render={({ field, fieldState }) => (
                     <FormItem>
                       <FormControl>
-                        <FileUpload
-                          endpoint="serverImage"
-                          value={field.value}
-                          onChange={field.onChange}
-                        />
+                        <div
+                          className={cn(
+                            "p-1 pt-0",
+                            fieldState.error &&
+                              "border-2 border-red-800 rounded-md shadow-lg"
+                          )}
+                        >
+                          <FileUpload
+                            endpoint="serverImage"
+                            value={field.value}
+                            onChange={field.onChange}
+                          />
+                        </div>
                       </FormControl>
+                      <FormMessage className="text-xs text-red-800" />
                     </FormItem>
                   )}
                 />

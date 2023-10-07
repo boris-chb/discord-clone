@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { Socket, io } from "socket.io-client";
 
 type SocketContext = {
-  socket: any | null;
+  socket: Socket | null;
   isConnected: boolean;
 };
 
@@ -22,25 +22,29 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    const socketClient = io(process.env.NEXT_PUBLIC_SITE_URL as string, {
-      path: "/api/socket/io",
+    const socketClient = io(process.env.NEXT_PUBLIC_BACKEND_URL as string, {
       addTrailingSlash: false,
     });
 
-    console.log(socketClient);
-
-    socketClient.on("connect", () => {
-      console.log("connected");
+    socketClient?.on("connect", () => {
       setIsConnected(true);
+      setSocket(socketClient);
+      console.log("client connected");
     });
 
-    socketClient.on("disconnect", () => {
+    socketClient?.on("disconnect", () => {
       setIsConnected(false);
+      setSocket(null);
+      console.log("client disconnected");
     });
 
-    setSocket(socketClient);
-
-    return () => {};
+    return () => {
+      socketClient?.close();
+      setSocket(null);
+      setIsConnected(false);
+      console.log("client connection closed");
+    };
+    // eslint-disable-next-line
   }, []);
 
   return (
