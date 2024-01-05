@@ -56,7 +56,7 @@ export default function ChatInput({
         body,
         fileUrl: "",
         createdAt: new Date(),
-        updatedAt: null,
+        updatedAt: new Date(),
         deleted: false,
         isUpdated: false,
         channelId,
