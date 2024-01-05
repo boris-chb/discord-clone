@@ -25,7 +25,7 @@ export async function PATCH(
     return NextResponse.json(server);
   } catch (error) {
     console.log("[PATCH] /api/servers/[serverId]/", error);
-    return new NextResponse("Could not edit server", { status: 500 });
+    return new NextResponse("Could not Edit Server", { status: 500 });
   }
 }
 

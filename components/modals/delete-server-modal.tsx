@@ -13,7 +13,7 @@ import {
 import { useModal } from "@/hooks/use-modal-store";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function DeleteServerModal() {
   const [isLoading, setIsLoading] = useState(false);
@@ -31,21 +31,21 @@ export default function DeleteServerModal() {
   const onDeleteServer = async () => {
     try {
       setIsLoading(true);
-      await axios.delete(`/api/servers/${server?.id}/`);
+      const res = await axios.delete(`/api/servers/${server?.id}/`);
 
-      onClose();
-      router.refresh();
       router.push("/");
+      onClose();
     } catch (error) {
       console.log("could not delete server", server?.id, error);
     } finally {
       setIsLoading(false);
+      onClose();
     }
   };
 
   return (
-    <Dialog open={isModalOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-white text-black p-1 overflow-hidden">
+    <Dialog onOpenChange={onClose} open={isModalOpen}>
+      <DialogContent className="bg-zinc-950 text-zinc-100 p-1 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">
             Are you sure?
@@ -57,13 +57,9 @@ export default function DeleteServerModal() {
             action cannot be undone!
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter className="bg-gray-100 px-6 py-4">
+        <DialogFooter className="bg-zinc-950 text-zinc-100 px-6 py-4">
           <div className="flex items-center justify-between w-full">
-            <Button
-              disabled={isLoading}
-              variant={"ghost"}
-              onClick={() => onClose()}
-            >
+            <Button disabled={isLoading} variant={"ghost"} onClick={onClose}>
               Cancel
             </Button>
             <Button

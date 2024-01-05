@@ -6,17 +6,21 @@ import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useChatStore } from "@/state/store";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Member, Profile } from "@prisma/client";
 import axios from "axios";
 import { ArrowRightCircle, Plus, Smile } from "lucide-react";
+import { useParams } from "next/navigation";
 import queryString from "query-string";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { v4 } from "uuid";
 import * as z from "zod";
 
 interface ChatInputProps {
   apiUrl: string;
   name: string;
   serverId: string;
+  currentUser: Member & { profile: Profile };
   id: string;
   type: "chat" | "channel";
 }
@@ -29,8 +33,8 @@ export default function ChatInput({
   apiUrl,
   name,
   id,
-  serverId,
   type,
+  currentUser,
 }: ChatInputProps) {
   const { socket } = useSocket();
   const { addMessage, addDm } = useChatStore();
@@ -41,42 +45,40 @@ export default function ChatInput({
     resolver: zodResolver(formSchema),
   });
 
-  const roomId = `${type}:${id}`;
-
-  // join chat room
-  useEffect(() => {
-    socket?.emit("join-room", roomId);
-
-    return () => {
-      socket?.emit("leave-room", roomId);
-    };
-
-    //eslint-disable-next-line
-  }, [roomId]);
+  const { serverId, channelId }: { serverId: string; channelId: string } =
+    useParams();
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      const body = form.getValues("body");
+      const msg = {
+        id: v4(),
+        body,
+        fileUrl: "",
+        createdAt: new Date(),
+        updatedAt: null,
+        deleted: false,
+        isUpdated: false,
+        channelId,
+        memberId: currentUser.id,
+        member: currentUser,
+      };
+
+      socket?.emit("send-message", msg);
+      // @ts-ignore
+      addMessage(msg);
+      form.reset();
+
       const url = queryString.stringifyUrl({
         url: apiUrl,
         query: { serverId, channelId: id },
       });
 
-      form.reset();
-
       const { data: message } = await axios.post(url, {
         serverId,
         chatId: id,
-        ...values,
+        body,
       });
-
-      if (type === "channel") {
-        addMessage(message);
-      } else if (type === "chat") {
-        addDm(message);
-      }
-
-      console.log("emitting message", message, roomId);
-      socket?.emit(`send-message`, { message, roomId });
     } catch (error) {
       console.log(error);
     }

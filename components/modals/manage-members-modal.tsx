@@ -55,10 +55,6 @@ export default function ManageMembersModal() {
 
   const isModalOpen = isOpen && type === "manageMembers";
 
-  useEffect(() => {
-    console.log("manage members modal rendered");
-  }, []);
-
   const onChangeRole = async (memberId: string, role: MemberRole) => {
     try {
       setLoadingId(memberId);
@@ -101,35 +97,33 @@ export default function ManageMembersModal() {
 
   return (
     <Dialog open={isModalOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-white text-black dark:text-zinc-100 dark:bg-zinc-800 overflow-hidden">
+      <DialogContent className="overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">
             Manage members
           </DialogTitle>
-          <DialogDescription className="text-center text-zinc-500">
+          <DialogDescription className="text-center">
             {server?.members?.length} Members
           </DialogDescription>
         </DialogHeader>
         <ScrollArea className="mt-8 max-h-[420px] pr-6">
           {server.members &&
             server.members.length > 0 &&
-            server.members.map(member => (
+            server.members.map((member) => (
               <div key={member.id} className="flex items-center gap-x-2 mb-6">
                 <UserAvatar src={member.profile.imageUrl} />
                 <div className="flex flex-col gap-1">
                   <div className="text-xs font-semibold flex gap-1 items-center">
                     {member.profile.name} {roleIconMap[member.role]}
                   </div>
-                  <p className="text-xs text-zinc-700 dark:text-zinc-200">
-                    {member.profile.email}
-                  </p>
+                  <p className="text-xs ">{member.profile.email}</p>
                 </div>
                 {server.profileId !== member.profileId &&
                   loadingId !== member.id && (
                     <div className="ml-auto">
-                      <DropdownMenu>
+                      <DropdownMenu modal={false}>
                         <DropdownMenuTrigger>
-                          <MoreVertical className="h-4 w-4 text-zinc-500" />
+                          <MoreVertical className="h-4 w-4 " />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent side="bottom">
                           <DropdownMenuSub>
@@ -173,7 +167,7 @@ export default function ManageMembersModal() {
                     </div>
                   )}
                 {loadingId === member.id && (
-                  <Loader2 className="animate-spin text-zinc-500 ml-auto w-4 h-4" />
+                  <Loader2 className="animate-spin  ml-auto w-4 h-4" />
                 )}
               </div>
             ))}

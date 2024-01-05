@@ -53,7 +53,7 @@ export default function InviteModal() {
 
   return (
     <Dialog open={isModalOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-white text-black p-1 overflow-hidden">
+      <DialogContent className="p-1 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">
             Send invite
@@ -62,13 +62,11 @@ export default function InviteModal() {
           <DialogDescription>
             Invite people to join your server.
           </DialogDescription>
-          <Label className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70">
-            Invite link
-          </Label>
+          <Label className="uppercase text-xs font-bold">Invite link</Label>
           <div className="flex items-center mt-2 gap-x-2">
             <Input
               disabled={isLoading}
-              className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
+              className="focus-visible:ring-0 focus-visible:ring-offset-0"
               value={inviteUrl}
             />
             <Button
@@ -77,7 +75,11 @@ export default function InviteModal() {
               onClick={onCopy}
               size="icon"
             >
-              {copied ? <Check className="text-emerald-700" /> : <Copy />}
+              {copied ? (
+                <Check className="text-emerald-700 focus-visible:ring-0 focus-visible:ring-offset-0" />
+              ) : (
+                <Copy />
+              )}
             </Button>
           </div>
           <Button
@@ -85,7 +87,7 @@ export default function InviteModal() {
             disabled={isLoading}
             variant={"link"}
             size={"sm"}
-            className="text-xs text-zinc-500 mt-4 mx-auto w-1/2"
+            className="text-xs mt-4 mx-auto w-1/2"
           >
             Generate new invite
             <RefreshCw className="w-4 h-4 ml-2" />

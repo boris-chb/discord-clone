@@ -73,6 +73,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    // {channelId => '123', serverId => '234'}
     console.log(req.nextUrl.searchParams);
     const serverId = req.nextUrl.searchParams.get("serverId");
     const channelId = req.nextUrl.searchParams.get("channelId");
@@ -131,7 +132,7 @@ export async function POST(req: NextRequest) {
     }
 
     const member = server.members.find(
-      member => member.profileId === profile.id
+      (member) => member.profileId === profile.id
     );
 
     if (!member) {

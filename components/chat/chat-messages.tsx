@@ -24,9 +24,17 @@ export default function ChatMessages({
   type,
 }: ChatMessagesProps) {
   const { socket } = useSocket();
-  const { messages, setMessages, addMessage, addDm, dms, setDms } =
+  const { messages, dms, setMessages, setDms, addMessage, addDm } =
     useChatStore();
 
+  // Scroll to bottom
+  useEffect(() => {
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages, dms]);
+
+  // Add messages to store
   useEffect(() => {
     if (type === "chat") {
       setDms(initialMessages as DirectMessage[]);
@@ -36,12 +44,7 @@ export default function ChatMessages({
     //eslint-disable-next-line
   }, []);
 
-  useEffect(() => {
-    if (bottomRef.current) {
-      bottomRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [messages, dms]);
-
+  // Listen for new messages from WebSocket
   useEffect(() => {
     const handleNewMessage = (message: Message | DirectMessage) => {
       if (type === "channel") {
@@ -51,14 +54,18 @@ export default function ChatMessages({
       }
     };
 
-    socket?.on("new-message", handleNewMessage);
+    socket?.on("new-message", (message) => {
+      console.log(`new message`, message);
+      addMessage(message);
+      console.log(messages);
+      return true;
+    });
 
     return () => {
       socket?.off("new-message", handleNewMessage);
     };
-
     //eslint-disable-next-line
-  }, []);
+  }, [socket]);
 
   const chatRef = useRef<ElementRef<"div">>(null);
   const bottomRef = useRef<ElementRef<"div">>(null);
@@ -79,7 +86,7 @@ export default function ChatMessages({
         {!messages ? (
           <ChatItemSkeleton length={5} />
         ) : (
-          messages.map(message => (
+          messages.map((message) => (
             <ChatItem
               key={message.id}
               id={message.id}
@@ -88,7 +95,9 @@ export default function ChatMessages({
               body={message.body}
               fileUrl={message.fileUrl}
               deleted={message.deleted}
-              isUpdated={message.updatedAt !== message.createdAt}
+              isUpdated={
+                message.updatedAt.getTime() !== message.createdAt.getTime()
+              }
               timestamp={format(new Date(message.createdAt), DATE_FORMAT)}
             />
           ))

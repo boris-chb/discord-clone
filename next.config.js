@@ -1,9 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["uploadthing.com", "utfs.io"],
+    remotePatterns: [{ hostname: "uploadthing.com" }, { hostname: "utfs.io" }],
   },
-  experimental: { serverActions: true },
 };
 
 const withBundleAnalyzer = require("@next/bundle-analyzer")({

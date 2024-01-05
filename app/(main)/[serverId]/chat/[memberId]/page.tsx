@@ -5,7 +5,7 @@ import MediaRoom from "@/components/media-room";
 import { getOrCreateChat } from "@/lib/chat";
 import { getCurrentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
-import { RedirectToSignIn } from "@clerk/nextjs";
+import { RedirectToSignIn, currentUser } from "@clerk/nextjs";
 
 interface ChatProps {
   params: {
@@ -29,6 +29,9 @@ export default async function ChatPage({
     where: {
       serverId,
       profileId: profile.id,
+    },
+    include: {
+      profile: true,
     },
   });
 
@@ -82,6 +85,7 @@ export default async function ChatPage({
           />
 
           <ChatInput
+            currentUser={currentMember}
             apiUrl="/api/direct-messages"
             serverId={serverId}
             name={interlocutor.profile.name}

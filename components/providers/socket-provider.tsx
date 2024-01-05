@@ -1,5 +1,8 @@
 "use client";
 
+import { getCurrentProfile } from "@/lib/current-profile";
+import { useUser } from "@clerk/nextjs";
+import { useParams } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 import { Socket, io } from "socket.io-client";
 
@@ -19,14 +22,14 @@ export const useSocket = () => {
 
 export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
+  const { serverId, channelId } = useParams();
+  const { user: currentUser } = useUser();
+
+  const user =
+    currentUser?.username ?? currentUser?.fullName ?? currentUser?.firstName;
 
   useEffect(() => {
-    const socketClient = io(
-      process.env.NEXT_PUBLIC_BACKEND_URL_PROD as string,
-      {
-        addTrailingSlash: false,
-      }
-    );
+    const socketClient = io(process.env.NEXT_PUBLIC_BACKEND_URL_PROD as string);
 
     socketClient?.on("connect", () => {
       setSocket(socketClient);
@@ -35,7 +38,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
     socketClient?.on("disconnect", () => {
       setSocket(null);
-      console.log("client disconnected");
+      console.log(`client disconnected`);
     });
 
     return () => {
@@ -46,7 +49,19 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     // eslint-disable-next-line
   }, []);
 
-  if (!socket) return <></>;
+  // Join room for current channel
+  useEffect(() => {
+    if (!currentUser || !socket || !channelId) return;
+
+    const roomId = `${serverId}:${channelId}`;
+
+    socket?.emit("join-room", { roomId, user });
+
+    // join a different room only when channelId or socket is changed
+    // no need to add currentUser, since changing it requires redirects, which
+    // modifies channelId, which is already included
+    //eslint-disable-next-line
+  }, [channelId, socket, currentUser]);
 
   return (
     <SocketContext.Provider

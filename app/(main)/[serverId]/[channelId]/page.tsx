@@ -19,9 +19,7 @@ interface ChannelProps {
 
 export default async function ChannelPage({
   params: { channelId, serverId },
-  searchParams,
 }: ChannelProps) {
-  console.log(searchParams);
   const profile = await getCurrentProfile();
   const channel = await db.channel.findUnique({
     where: {
@@ -33,12 +31,15 @@ export default async function ChannelPage({
       serverId,
       profileId: profile?.id,
     },
+    include: {
+      profile: true,
+    },
   });
 
   if (!member || !channel) redirect("/");
 
   const messages = await db.message.findMany({
-    // take: 10,
+    take: 10,
     where: {
       channelId: channelId as string,
     },
@@ -69,6 +70,7 @@ export default async function ChannelPage({
 
           <ChatInput
             serverId={serverId}
+            currentUser={member}
             name={channel.name}
             type="channel"
             apiUrl="/api/messages"

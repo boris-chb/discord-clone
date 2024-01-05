@@ -1,6 +1,7 @@
 import { getCurrentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
 import { MemberRole } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuidv4, v4 } from "uuid";
 
@@ -14,7 +15,6 @@ export async function POST(req: NextRequest) {
 
     const server = await db.server.create({
       data: {
-        id: v4().slice(0, 8),
         profileId: profile.id,
         name,
         imageUrl,
@@ -28,9 +28,11 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    revalidatePath(`/${server.id}`);
+
     return NextResponse.json(server);
   } catch (e) {
-    console.log("Could not create server");
-    return new NextResponse("INTERNAL ERROR", { status: 500 });
+    console.log("Could not create server", e);
+    return new NextResponse("Could not Create Server", { status: 500 });
   }
 }

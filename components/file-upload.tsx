@@ -19,7 +19,6 @@ const FileUpload: React.FC<FileUploadProps> = ({
 
   // got an image already, render it:
   if (value && fileType !== "pdf") {
-    console.log("img value", value);
     return (
       <div className="relative h-24 w-24">
         <Image fill src={value} alt="uploaded image" className="rounded-lg" />
@@ -37,7 +36,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
   return (
     <UploadDropzone
       endpoint={endpoint}
-      onClientUploadComplete={res => {
+      onClientUploadComplete={(res) => {
         onChange(res?.[0].url);
       }}
       onUploadError={(error: Error) => {

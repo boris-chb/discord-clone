@@ -58,6 +58,8 @@ export default function ChatItem({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  console.log(isUpdated, deleted);
+
   const fileType = fileUrl?.split(".").pop();
   const isAdmin = currentMember.role === MemberRole.ADMIN;
   const isModerator = currentMember.role === MemberRole.MODERATOR;
