@@ -41,15 +41,13 @@ export default function RootLayout({
             defaultTheme="dark"
             storageKey="discord-theme"
           >
-            <body className={`${inter.className} bg-white dark:bg-stone-800`}>
+            <body className={`${inter.className}`}>
               <Toaster />
               <ModalProvider />
 
-              <div className="h-full">
-                <div className="hidden md:flex h-full w-[80px] z-30 flex-col fixed inset-y-0">
-                  <Sidebar />
-                </div>
-                <main className="md:pl-[80px] h-full">{children}</main>
+              <div className="h-full flex">
+                <Sidebar />
+                <main className="h-full w-full">{children}</main>
               </div>
             </body>
           </ThemeProvider>

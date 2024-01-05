@@ -7,10 +7,11 @@ import { db } from "@/lib/db";
 import { RedirectToSignIn, UserButton } from "@clerk/nextjs";
 import SidebarAction from "./sidebar-action";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
-interface SidebarProps {}
+interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-const Sidebar: React.FC<SidebarProps> = async () => {
+const Sidebar: React.FC<SidebarProps> = async ({ className }) => {
   const profile = await getCurrentProfile();
 
   if (!profile) return <RedirectToSignIn />;
@@ -38,12 +39,17 @@ const Sidebar: React.FC<SidebarProps> = async () => {
   });
 
   return (
-    <nav className="space-y-4 py-3 flex flex-col items-center h-full text-primary w-full dark:bg-zinc-950 bg-zinc-200">
+    <nav
+      className={cn(
+        "space-y-4 py-3 md:flex flex-col items-center h-full text-primary  dark:bg-zinc-950 bg-zinc-200 hidden w-18",
+        className && className
+      )}
+    >
       <SidebarAction />
       <Separator className="w-3/4 bg-zinc-300 dark:bg-zinc-700 mx-auto" />
       <ScrollArea className="flex-1 w-full h-full my-3">
         <div className="flex flex-col gap-3">
-          {servers.map(server => (
+          {servers.map((server) => (
             <Link
               key={server.id}
               href={`/${server.id}/${server?.channels[0].id}`}
@@ -65,6 +71,12 @@ const Sidebar: React.FC<SidebarProps> = async () => {
           appearance={{
             elements: {
               avatarBox: "h-12 w-12",
+              userPreviewSecondaryIdentifier: "dark:text-zinc-100",
+              userButtonPopoverCard:
+                "dark:bg-zinc-800 dark:text-white dark:border dark:border-zinc-600",
+              userButtonPopoverActionButtonText: "dark:text-white",
+              userButtonPopoverActions: "dark:bg-zinc-800",
+              userButtonPopoverFooter: "hidden",
             },
           }}
         />

@@ -10,21 +10,16 @@ import { Edit, ShieldAlert, ShieldCheck, Trash } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import queryString from "query-string";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { format } from "date-fns";
 
-interface ChatItemProps {
-  id: string;
-  body: string;
-  member: Member & {
-    profile: Profile;
-  };
-  timestamp: string;
-  fileUrl: string | null;
-  deleted: boolean;
+interface MessageProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    React.RefAttributes<HTMLDivElement> {
+  message: Message;
   currentMember: Member;
-  isUpdated: boolean;
 }
 
 const roleIconMap = {
@@ -33,16 +28,23 @@ const roleIconMap = {
   ADMIN: <ShieldAlert className="h-4 w-4 ml-2 text-rose-400" />,
 };
 
-export default function ChatItem({
-  body,
+const FIRST_USER_MESSAGE_DATE_FORMAT = "dd/MM/yyyy HH:mm";
+
+export default function Message({
   currentMember,
-  deleted,
-  fileUrl,
-  id,
-  isUpdated,
-  member,
-  timestamp,
-}: ChatItemProps) {
+  message: {
+    body,
+    channelId,
+    createdAt,
+    deleted,
+    fileUrl,
+    id,
+    member,
+    memberId,
+    updatedAt,
+  },
+  ...rest
+}: MessageProps) {
   const [isEditing, setIsEditing] = useState(false);
   const { onOpen } = useModal();
   const params = useParams();
@@ -58,30 +60,31 @@ export default function ChatItem({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  console.log(isUpdated, deleted);
-
   const fileType = fileUrl?.split(".").pop();
-  const isAdmin = currentMember.role === MemberRole.ADMIN;
-  const isModerator = currentMember.role === MemberRole.MODERATOR;
+  const isAdmin = currentMember.role === MemberRole.Admin;
+  const isModerator = currentMember.role === MemberRole.Moderator;
   const isOwner = currentMember.id === member.id;
   const canDeleteMessage = !deleted && isOwner && !fileUrl;
   const canEditMessage = !deleted && isOwner && !fileUrl;
   const isPDF = fileType === "pdf" && fileUrl;
   const isImage = !isPDF && fileUrl;
   const avatar = isOwner ? (
-    <UserAvatar src={member.profile.imageUrl} />
+    <UserAvatar className="w-10 h-10" src={member.profile.imageUrl} />
   ) : (
     <Link
       className="hover:drop-shadow-md transition"
       href={`/${params?.serverId}/chat/${member.id}`}
     >
-      <UserAvatar src={member.profile.imageUrl} />
+      <UserAvatar className="w-10 h-10" src={member.profile.imageUrl} />
     </Link>
   );
 
   return (
-    <div className="relative group flex items-center hover:bg-black/5 p-4 transition w-full">
-      <div className="group flex gap-x-2 items-start w-full">
+    <div
+      className="relative group flex items-center hover:bg-black/5 px-4 py-2 transition w-full"
+      {...rest}
+    >
+      <div className="group flex gap-x-3 items-center justify-start w-full">
         {avatar}
         <div className="flex flex-col w-full">
           {/* SENDER & TIMESTAMP */}
@@ -91,13 +94,15 @@ export default function ChatItem({
                 className="text-sm font-semibold hover:underline"
                 href={`/${params?.serverId}/chat/${member.id}`}
               >
-                {member.profile.name}
+                <span className="">{member.profile.name}</span>
               </Link>
               <ActionTooltip label={member.role}>
                 {roleIconMap[member.role]}
               </ActionTooltip>
             </div>
-            <span className="text-xs">{timestamp}</span>
+            <time className="text-xs text-muted-foreground">
+              {format(new Date(createdAt), FIRST_USER_MESSAGE_DATE_FORMAT)}
+            </time>
             {canDeleteMessage && (
               <div className="hidden group-hover:flex items-center ml-4 gap-x-2 p-1 bg-white dark:bg-zinc-800 border rounded-sm">
                 {canEditMessage && (
@@ -128,7 +133,7 @@ export default function ChatItem({
               )}
             >
               {body}
-              {isUpdated && !deleted && (
+              {updatedAt && !deleted && (
                 <span className="text-xs mx-2 text-zinc-500 dark:text-zinc-400">
                   (edited)
                 </span>
@@ -139,6 +144,45 @@ export default function ChatItem({
             <MessageEditForm id={id} body={body} toggleEdit={setIsEditing} />
           )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+export function MessageFollowUp({
+  currentMember,
+  message: {
+    body,
+    channelId,
+    createdAt,
+    deleted,
+    fileUrl,
+    id,
+    member,
+    memberId,
+    updatedAt,
+  },
+  ...rest
+}: MessageProps) {
+  return (
+    <div className="group py-1 px-4 pr-16 leading-[22px] hover:bg-gray-950/[.07]">
+      <div className="flex gap-x-3 items-baseline">
+        <p className="pl-2 text-xs text-muted-foreground opacity-0 group-hover:opacity-100">
+          {format(new Date(createdAt), "HH:mm")}
+        </p>
+        <p
+          className={cn(
+            "text-sm text-zinc-600 dark:text-zinc-300",
+            deleted && "italic text-zinc-500 dark:text-zinc-400 text-xs"
+          )}
+        >
+          {body}
+          {updatedAt && !deleted && (
+            <span className="text-xs mx-2 text-zinc-500 dark:text-zinc-400">
+              (edited)
+            </span>
+          )}
+        </p>
       </div>
     </div>
   );

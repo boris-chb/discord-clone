@@ -38,22 +38,24 @@ export default async function ChannelPage({
 
   if (!member || !channel) redirect("/");
 
-  const messages = await db.message.findMany({
-    take: 10,
-    where: {
-      channelId: channelId as string,
-    },
-    include: {
-      member: {
-        include: {
-          profile: true,
+  const messages = (
+    await db.message.findMany({
+      take: 20,
+      where: {
+        channelId: channelId as string,
+      },
+      include: {
+        member: {
+          include: {
+            profile: true,
+          },
         },
       },
-    },
-    orderBy: {
-      createdAt: "asc",
-    },
-  });
+      orderBy: {
+        createdAt: "desc",
+      },
+    })
+  ).reverse();
 
   return (
     <div className="flex flex-col h-full bg-white dark:bg-zinc-800">

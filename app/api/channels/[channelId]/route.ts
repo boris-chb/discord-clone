@@ -26,7 +26,7 @@ export async function PATCH(
         members: {
           some: {
             profileId: profile.id,
-            role: { in: [MemberRole.ADMIN, MemberRole.MODERATOR] },
+            role: { in: [MemberRole.Admin, MemberRole.Moderator] },
           },
         },
       },
@@ -75,7 +75,7 @@ export async function DELETE(
         members: {
           some: {
             profileId: profile.id,
-            role: { in: [MemberRole.ADMIN, MemberRole.MODERATOR] },
+            role: { in: [MemberRole.Admin, MemberRole.Moderator] },
           },
         },
       },

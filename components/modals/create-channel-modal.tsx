@@ -43,7 +43,7 @@ const formSchema = z.object({
   name: z
     .string()
     .min(1, { message: "Channel name is required." })
-    .refine(name => name.toLowerCase() !== "general", {
+    .refine((name) => name.toLowerCase() !== "general", {
       message: "Cannot name channel as 'General'",
     }),
   type: z.nativeEnum(ChannelType),
@@ -93,7 +93,7 @@ export default function CreateChannelModal() {
       router.refresh();
       onClose();
     } catch (e) {
-      console.log(e);
+      console.log("Could not submit message", e);
     }
   };
 
@@ -158,7 +158,7 @@ export default function CreateChannelModal() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {Object.values(ChannelType).map(type => (
+                        {Object.values(ChannelType).map((type) => (
                           <SelectItem
                             className="capitalize"
                             key={type}

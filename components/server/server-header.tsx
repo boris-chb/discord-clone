@@ -26,7 +26,7 @@ interface ServerHeaderProps {
 
 const ServerHeader: React.FC<ServerHeaderProps> = ({ server, role }) => {
   const { onOpen } = useModal();
-  const isAdmin = role === MemberRole.ADMIN;
+  const isAdmin = role === MemberRole.Admin;
   const isModerator = isAdmin;
 
   return (
@@ -68,7 +68,6 @@ const ServerHeader: React.FC<ServerHeaderProps> = ({ server, role }) => {
         {isAdmin && (
           <DropdownMenuItem
             onClick={() => {
-              console.log("opening edit server", server);
               onOpen("editServer", { server });
             }}
             className="px-3 py-2 text-sm cursor-pointer "

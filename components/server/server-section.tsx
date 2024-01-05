@@ -28,7 +28,7 @@ const ServerSection: React.FC<ServerSectionProps> = ({
       </p>
 
       {/* CREATE CHANNEL BUTTON */}
-      {role !== MemberRole.GUEST && sectionType === "channels" && (
+      {role !== MemberRole.Guest && sectionType === "channels" && (
         <ActionTooltip label="Create Channel" side="top">
           <button
             onClick={() => onOpen("createChannel", { channelType })}
@@ -38,7 +38,7 @@ const ServerSection: React.FC<ServerSectionProps> = ({
           </button>
         </ActionTooltip>
       )}
-      {role === MemberRole.ADMIN && sectionType === "members" && (
+      {role === MemberRole.Admin && sectionType === "members" && (
         <ActionTooltip label="Manage Members" side="top">
           <button
             onClick={() => onOpen("manageMembers", { server })}

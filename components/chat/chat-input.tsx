@@ -65,7 +65,6 @@ export default function ChatInput({
       };
 
       socket?.emit("send-message", msg);
-      // @ts-ignore
       addMessage(msg);
       form.reset();
 

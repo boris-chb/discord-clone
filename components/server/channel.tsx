@@ -53,17 +53,17 @@ export default function Channel({ channel, role, server }: ChannelProps) {
       >
         {channel.name}
       </p>
-      {channel.name !== "general" && role !== MemberRole.GUEST && (
+      {channel.name !== "general" && role !== MemberRole.Guest && (
         <div className="flex ml-auto items-center gap-2">
           <ActionTooltip label="Edit">
             <Edit
-              onClick={e => handleAction(e, "editChannel")}
+              onClick={(e) => handleAction(e, "editChannel")}
               className="hidden group-hover:block w-3 h-3 text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 transition"
             />
           </ActionTooltip>
           <ActionTooltip label="Delete">
             <Trash
-              onClick={e => handleAction(e, "deleteChannel")}
+              onClick={(e) => handleAction(e, "deleteChannel")}
               className="hidden group-hover:block w-3 h-3 text-zinc-500 hover:text-rose-600 dark:text-zinc-400 dark:hover:text-rose-300 transition"
             />
           </ActionTooltip>

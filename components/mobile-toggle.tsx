@@ -10,16 +10,17 @@ interface MobileSidebarProps {
 
 export default function MobileSidebar({ serverId }: MobileSidebarProps) {
   return (
-    <Sheet>
+    <Sheet modal={false}>
       <SheetTrigger asChild>
         <Button variant="ghost" size="icon" className="md:hidden">
           <Menu />
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="p-0 flex gap-0 w-72 bg-red-200">
-        <div className="w-[80px]">
-          <Sidebar />
-        </div>
+      <SheetContent
+        side="left"
+        className="p-0 flex gap-0 min-w-[72] sm:max-w-none md:hidden"
+      >
+        <Sidebar className="flex" />
         <ServerSidebar serverId={serverId} />
       </SheetContent>
     </Sheet>

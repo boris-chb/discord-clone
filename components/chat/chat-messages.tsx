@@ -1,11 +1,10 @@
 "use client";
 
-import ChatItem from "@/components/chat/chat-item";
+import Message, { MessageFollowUp } from "@/components/chat/chat-item";
 import ChatItemSkeleton from "@/components/chat/chat-item-loading";
 import { useSocket } from "@/components/providers/socket-provider";
 import { useChatStore } from "@/state/store";
 import type { Member } from "@prisma/client";
-import { format } from "date-fns";
 import { ElementRef, useEffect, useRef } from "react";
 
 interface ChatMessagesProps {
@@ -15,8 +14,6 @@ interface ChatMessagesProps {
   type: "channel" | "chat";
   initialMessages: Message[] | DirectMessage[];
 }
-
-const DATE_FORMAT = "d MMM yyyy, HH:mm";
 
 export default function ChatMessages({
   initialMessages,
@@ -57,8 +54,6 @@ export default function ChatMessages({
     socket?.on("new-message", (message) => {
       console.log(`new message`, message);
       addMessage(message);
-      console.log(messages);
-      return true;
     });
 
     return () => {
@@ -80,29 +75,39 @@ export default function ChatMessages({
     );
 
   return (
-    <div className="flex-1 flex flex-col py-4 overflow-y-auto">
+    <div className="flex-1 flex-col gap-1 py-4 overflow-y-auto">
       {/* perform checks for pagination (infinite scroll) */}
-      <div className="flex flex-col m-2">
-        {!messages ? (
-          <ChatItemSkeleton length={5} />
-        ) : (
-          messages.map((message) => (
-            <ChatItem
-              key={message.id}
-              id={message.id}
-              currentMember={member}
-              member={message.member}
-              body={message.body}
-              fileUrl={message.fileUrl}
-              deleted={message.deleted}
-              isUpdated={
-                message.updatedAt.getTime() !== message.createdAt.getTime()
-              }
-              timestamp={format(new Date(message.createdAt), DATE_FORMAT)}
-            />
-          ))
-        )}
-      </div>
+      {!messages ? (
+        <ChatItemSkeleton length={10} />
+      ) : (
+        messages.map((message, i) => {
+          const isLastMessage = i === messages.length - 1;
+          const isFirstMessageFromUser =
+            i === 0 ||
+            message.member.profile.name !== messages[i - 1].member.profile.name;
+
+          if (isFirstMessageFromUser) {
+            return (
+              <Message
+                key={message.id}
+                currentMember={member}
+                message={message}
+                ref={isLastMessage ? bottomRef : null}
+              />
+            );
+          } else {
+            return (
+              <MessageFollowUp
+                key={message.id}
+                currentMember={member}
+                message={message}
+                ref={isLastMessage ? bottomRef : null}
+              />
+            );
+          }
+        })
+      )}
+
       <div ref={bottomRef}></div>
     </div>
   );

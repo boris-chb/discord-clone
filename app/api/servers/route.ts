@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
           create: [{ name: "general", profileId: profile.id }],
         },
         members: {
-          create: [{ profileId: profile.id, role: MemberRole.ADMIN }],
+          create: [{ profileId: profile.id, role: MemberRole.Admin }],
         },
       },
     });

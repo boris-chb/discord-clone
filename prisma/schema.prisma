@@ -40,14 +40,14 @@ model Server {
 }
 
 enum MemberRole {
-  ADMIN
-  MODERATOR
-  GUEST
+  Admin
+  Moderator
+  Guest
 }
 
 model Member {
   id   String     @id @default(uuid())
-  role MemberRole @default(GUEST)
+  role MemberRole @default(Guest)
 
   profileId String
   profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
@@ -104,8 +104,8 @@ model Message {
   channelId String
   channel   Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime?
 
   deleted Boolean @default(false)
 
