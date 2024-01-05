@@ -23,9 +23,9 @@ interface MessageProps
 }
 
 const roleIconMap = {
-  GUEST: null,
-  MODERATOR: <ShieldCheck className="h-4 w-4 ml-2 text-indigo-400" />,
-  ADMIN: <ShieldAlert className="h-4 w-4 ml-2 text-rose-400" />,
+  Guest: null,
+  Moderator: <ShieldCheck className="h-4 w-4 ml-2 text-indigo-400" />,
+  Admin: <ShieldAlert className="h-4 w-4 ml-2 text-rose-400" />,
 };
 
 const FIRST_USER_MESSAGE_DATE_FORMAT = "dd/MM/yyyy HH:mm";

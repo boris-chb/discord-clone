@@ -14,7 +14,7 @@ export async function PATCH(
     const server = await db.server.update({
       where: {
         id: serverId,
-        // make sure it's not the admin
+        // make sure it's not the Admin
         profileId: {
           not: profile.id,
         },

@@ -41,9 +41,9 @@ import qs from "query-string";
 import { useEffect, useState } from "react";
 
 const roleIconMap = {
-  GUEST: null,
-  MODERATOR: <ShieldCheck className="h-4 w-4 ml-2 text-indigo-400" />,
-  ADMIN: <ShieldAlert className="h-4 w-4 ml-2 text-rose-400" />,
+  Guest: null,
+  Moderator: <ShieldCheck className="h-4 w-4 ml-2 text-indigo-400" />,
+  Admin: <ShieldAlert className="h-4 w-4 ml-2 text-rose-400" />,
 };
 
 export default function ManageMembersModal() {
@@ -135,21 +135,21 @@ export default function ManageMembersModal() {
                               <DropdownMenuSubContent>
                                 <DropdownMenuItem
                                   onClick={() =>
-                                    onChangeRole(member.id, "GUEST")
+                                    onChangeRole(member.id, "Guest")
                                   }
                                 >
                                   <Shield className="h-4 w-4 mr-2" /> Guest{" "}
-                                  {member.role === "GUEST" && (
+                                  {member.role === "Guest" && (
                                     <Check className="h-4 w-4 ml-auto" />
                                   )}
                                 </DropdownMenuItem>{" "}
                                 <DropdownMenuItem
                                   onClick={() =>
-                                    onChangeRole(member.id, "MODERATOR")
+                                    onChangeRole(member.id, "Moderator")
                                   }
                                 >
                                   <Shield className="h-4 w-4 mr-2" /> Moderator{" "}
-                                  {member.role === "MODERATOR" && (
+                                  {member.role === "Moderator" && (
                                     <Check className="h-4 w-4 ml-auto" />
                                   )}
                                 </DropdownMenuItem>

@@ -79,7 +79,7 @@ export async function DELETE(
           deleteMany: {
             id: params.memberId,
             profileId: {
-              // admin can't remove themselves
+              // Admin can't remove themselves
               not: profile.id,
             },
           },
