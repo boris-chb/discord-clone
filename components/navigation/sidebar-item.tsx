@@ -1,9 +1,9 @@
 "use client";
 
 import ActionTooltip from "@/components/navigation/sidebar-tooltip";
+import { useParams, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { useParams, useRouter } from "next/navigation";
 
 interface SidebarItemProps {
   id: string;
@@ -22,13 +22,13 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ id, imageUrl, name }) => {
           className={cn(
             "absolute left-0 bg-primary rounded-r-2xl transition-all duration-300 w-[4px]",
             params?.serverId !== id && "group-hover:h-5",
-            params?.serverId === id ? "h-10" : "h-2"
+            params?.serverId === id ? "h-10" : "h-2",
           )}
         />
         <div
           className={cn(
             "relative group flex mx-3 h-12 w-12 rounded-lg group-hover:rounded-3xl transition-all overflow-hidden",
-            params?.serverId === id && "bg-primary/10 text-primary rounded-lg"
+            params?.serverId === id && "bg-primary/10 text-primary rounded-lg",
           )}
         >
           <Image

@@ -1,11 +1,11 @@
 "use client";
 
 import Message, { MessageFollowUp } from "@/components/chat/chat-item";
-import ChatItemSkeleton from "@/components/chat/chat-item-loading";
 import { useSocket } from "@/components/providers/socket-provider";
-import { useChatStore } from "@/state/store";
-import type { Member } from "@prisma/client";
+import ChatItemSkeleton from "@/components/chat/chat-item-loading";
 import { ElementRef, useEffect, useRef } from "react";
+import type { Member } from "@prisma/client";
+import { useChatStore } from "@/state/store";
 
 interface ChatMessagesProps {
   name: string;
@@ -43,6 +43,7 @@ export default function ChatMessages({
 
   // Listen for new messages from WebSocket
   useEffect(() => {
+    if (!socket) return;
     const handleNewMessage = (message: Message | DirectMessage) => {
       if (type === "channel") {
         addMessage(message as Message);
@@ -51,10 +52,7 @@ export default function ChatMessages({
       }
     };
 
-    socket?.on("new-message", (message) => {
-      console.log(`new message`, message);
-      addMessage(message);
-    });
+    socket?.on("new-message", handleNewMessage);
 
     return () => {
       socket?.off("new-message", handleNewMessage);
@@ -65,20 +63,20 @@ export default function ChatMessages({
   const chatRef = useRef<ElementRef<"div">>(null);
   const bottomRef = useRef<ElementRef<"div">>(null);
 
-  if (messages?.length === 0)
-    return (
-      <div className="h-full flex items-end justify-center">
-        <p className="p-3 text-zinc-400 font-light">
-          This is the start of your conversation.
-        </p>
-      </div>
-    );
+  // if (messages?.length === 0)
+  //   return (
+  //     <div className="h-full flex items-end justify-center">
+  //       <p className="p-3 text-zinc-400 font-light">
+  //         This is the start of your conversation.
+  //       </p>
+  //     </div>
+  //   );
 
   return (
     <div className="flex-1 flex-col gap-1 py-4 overflow-y-auto">
       {/* perform checks for pagination (infinite scroll) */}
-      {!messages ? (
-        <ChatItemSkeleton length={10} />
+      {messages.length === 0 || !messages ? (
+        <ChatItemSkeleton length={6} />
       ) : (
         messages.map((message, i) => {
           const isLastMessage = i === messages.length - 1;
@@ -88,21 +86,27 @@ export default function ChatMessages({
 
           if (isFirstMessageFromUser) {
             return (
-              <Message
-                key={message.id}
-                currentMember={member}
-                message={message}
-                ref={isLastMessage ? bottomRef : null}
-              />
+              <div key={message.id}>
+                <Message
+                  key={message.id}
+                  currentMember={member}
+                  message={message}
+                />
+                <div
+                  className="hidden"
+                  ref={isLastMessage ? bottomRef : null}
+                ></div>
+              </div>
             );
           } else {
             return (
-              <MessageFollowUp
-                key={message.id}
-                currentMember={member}
-                message={message}
-                ref={isLastMessage ? bottomRef : null}
-              />
+              <div key={message.id}>
+                <MessageFollowUp currentMember={member} message={message} />
+                <div
+                  className="hidden"
+                  ref={isLastMessage ? bottomRef : null}
+                ></div>
+              </div>
             );
           }
         })

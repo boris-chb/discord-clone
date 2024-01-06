@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,11 +8,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 import { useModal } from "@/hooks/use-modal-store";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function DeleteServerModal() {
   const [isLoading, setIsLoading] = useState(false);
@@ -31,9 +31,10 @@ export default function DeleteServerModal() {
   const onDeleteServer = async () => {
     try {
       setIsLoading(true);
-      const res = await axios.delete(`/api/servers/${server?.id}/`);
+      await axios.delete(`/api/servers/${server?.id}/`);
 
-      router.push("/");
+      router.push(`/`);
+      router.refresh();
       onClose();
     } catch (error) {
       console.log("could not delete server", server?.id, error);

@@ -20,15 +20,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { useModal } from "@/hooks/use-modal-store";
-import { cn } from "@/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
-import { useParams, useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { Input } from "../ui/input";
-import { ChannelType } from "@prisma/client";
 import {
   Select,
   SelectContent,
@@ -36,14 +27,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useParams, useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useModal } from "@/hooks/use-modal-store";
+import { ChannelType } from "@prisma/client";
+import { useForm } from "react-hook-form";
 import queryString from "query-string";
+import { Input } from "../ui/input";
 import { useEffect } from "react";
+import { cn } from "@/lib/utils";
+import axios from "axios";
+import * as z from "zod";
 
 const formSchema = z.object({
   name: z
     .string()
     .min(1, { message: "Channel name is required." })
-    .refine((name) => name.toLowerCase() !== "general", {
+    .refine(name => name.toLowerCase() !== "general", {
       message: "Cannot name channel as 'General'",
     }),
   type: z.nativeEnum(ChannelType),
@@ -128,7 +128,7 @@ export default function CreateChannelModal() {
                       <Input
                         className={cn(
                           "focus-visible:ring-0 focus-visible:ring-offset-0",
-                          fieldState.invalid && "border border-red-800"
+                          fieldState.invalid && "border border-red-800",
                         )}
                         disabled={isLoading}
                         placeholder="Choose a name for your channel"
@@ -158,7 +158,7 @@ export default function CreateChannelModal() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {Object.values(ChannelType).map((type) => (
+                        {Object.values(ChannelType).map(type => (
                           <SelectItem
                             className="capitalize"
                             key={type}

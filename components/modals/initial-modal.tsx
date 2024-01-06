@@ -22,14 +22,14 @@ import {
 
 import FileUpload from "@/components/file-upload";
 
-import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
 import { Input } from "../ui/input";
+import { cn } from "@/lib/utils";
+import axios from "axios";
+import * as z from "zod";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Server name is required." }),
@@ -111,7 +111,7 @@ const InitialModal: React.FC<InitialModalProps> = () => {
                       <Input
                         className={cn(
                           "bg-zinc-300/50 focus-visible:ring-0 text-black focus-visible:ring-offset-0 border-0",
-                          fieldState.invalid && "border border-red-800"
+                          fieldState.invalid && "border border-red-800",
                         )}
                         disabled={isLoading}
                         placeholder="Choose a name for your server"

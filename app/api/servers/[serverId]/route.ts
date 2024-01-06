@@ -1,10 +1,10 @@
 import { getCurrentProfile } from "@/lib/current-profile";
-import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
+import { db } from "@/lib/db";
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { serverId: string } }
+  { params }: { params: { serverId: string } },
 ) {
   try {
     const profile = await getCurrentProfile();
@@ -31,7 +31,7 @@ export async function PATCH(
 
 export async function DELETE(
   req: NextRequest,
-  { params: { serverId } }: { params: { serverId: string } }
+  { params: { serverId } }: { params: { serverId: string } },
 ) {
   try {
     // TODO validation check

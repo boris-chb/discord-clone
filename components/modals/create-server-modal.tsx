@@ -22,15 +22,15 @@ import {
 
 import FileUpload from "@/components/file-upload";
 
-import { useModal } from "@/hooks/use-modal-store";
-import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
+import { useModal } from "@/hooks/use-modal-store";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
 import { Input } from "../ui/input";
 import { useEffect } from "react";
+import { cn } from "@/lib/utils";
+import axios from "axios";
+import * as z from "zod";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Server name is required." }),
@@ -60,8 +60,8 @@ export default function CreateServerModal() {
       const { data } = await axios.post("/api/servers", values);
 
       form.reset();
-      router.refresh();
       router.push(`/${data.id}`);
+      router.refresh();
       onClose();
     } catch (e) {
       console.log(e);
@@ -98,7 +98,7 @@ export default function CreateServerModal() {
                           className={cn(
                             "p-1 pt-0",
                             fieldState.error &&
-                              "border-2 border-rose-800 rounded-md shadow-lg"
+                              "border-2 border-rose-800 rounded-md shadow-lg",
                           )}
                         >
                           <FileUpload
@@ -125,7 +125,7 @@ export default function CreateServerModal() {
                       <Input
                         className={cn(
                           "focus-visible:ring-0  focus-visible:ring-offset-0",
-                          fieldState.invalid && "border border-rose-800"
+                          fieldState.invalid && "border border-rose-800",
                         )}
                         disabled={isLoading}
                         placeholder="Choose a name for your server"

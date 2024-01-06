@@ -1,8 +1,8 @@
 "use client";
 
-import { Plus } from "lucide-react";
-import ActionTooltip from "./sidebar-tooltip";
 import { useModal } from "@/hooks/use-modal-store";
+import ActionTooltip from "./sidebar-tooltip";
+import { Plus } from "lucide-react";
 
 interface SidebarItemProps {}
 

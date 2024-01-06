@@ -1,9 +1,9 @@
 "use client";
 
+import { LiveKitRoom, VideoConference } from "@livekit/components-react";
+import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { LiveKitRoom, VideoConference } from "@livekit/components-react";
 import "@livekit/components-styles";
 import axios from "axios";
 
@@ -25,7 +25,7 @@ export default function MediaRoom({ audio, chatId, video }: MediaRoomProps) {
     const getToken = async () => {
       try {
         const { data } = await axios.get(
-          `/api/livekit?room=${chatId}&username=${name}`
+          `/api/livekit?room=${chatId}&username=${name}`,
         );
         console.log(data);
         setToken(data.token);

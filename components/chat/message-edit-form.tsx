@@ -1,13 +1,13 @@
-"use client";
-
-import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useChatStore } from "@/state/store";
+import { useParams } from "next/navigation";
+import { useForm } from "react-hook-form";
 import queryString from "query-string";
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import axios from "axios";
 import { z } from "zod";
 
 interface MessageEditFormProps {
@@ -30,32 +30,50 @@ export default function MessageEditForm({
     },
   });
 
+  const { messages, setMessages } = useChatStore();
+
+  const { serverId } = useParams();
+
   const isLoading = form.formState.isLoading;
 
   useEffect(
     () => form.reset({ body }),
     // eslint-disable-next-line
-    [body]
+    [body],
   );
 
   const onEditMessage = async (values: z.infer<typeof formSchema>) => {
     try {
       const url = queryString.stringifyUrl({
         url: `/api/messages`,
+        query: {
+          messageId: id,
+          serverId,
+        },
       });
 
-      await axios.patch(url, values);
+      const res = await axios.patch(url, values);
+
       form.reset();
       toggleEdit(false);
+
+      const updatedMessages = [...messages];
+      const indexToEdit = updatedMessages.findIndex(
+        msg => msg.id === res.data.updatedMsg.id,
+      );
+      if (indexToEdit !== -1) {
+        updatedMessages[indexToEdit].body = res.data.updatedMsg.body;
+      }
+      setMessages(updatedMessages);
     } catch (error) {
-      console.log(error);
+      console.log("Could not edit message\n", error);
     }
   };
 
   return (
     <Form {...form}>
       <form
-        className="flex items-center w-full gap-x-2 pt-2"
+        className="flex items-center w-full pr-4 gap-x-2"
         onSubmit={form.handleSubmit(onEditMessage)}
       >
         <FormField
@@ -67,7 +85,7 @@ export default function MessageEditForm({
                 <div className="relative w-full">
                   <Input
                     disabled={isLoading}
-                    className="p-2 bg-zinc-200/90 dark:bg-zinc-700/75 border-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-zinc-600 dark:text-zinc-200"
+                    className="bg-zinc-200/90 dark:bg-zinc-700/75 border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-zinc-600 dark:text-zinc-200"
                     placeholder="Edited message"
                     {...field}
                   />

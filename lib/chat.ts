@@ -2,7 +2,7 @@ import { db } from "@/lib/db";
 
 export const getOrCreateChat = async (
   firstMemberId: string,
-  secondMemberId: string
+  secondMemberId: string,
 ) => {
   let chat =
     (await findChat(firstMemberId, secondMemberId)) ||

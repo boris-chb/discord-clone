@@ -1,7 +1,7 @@
 import { getCurrentProfile } from "@/lib/current-profile";
-import { db } from "@/lib/db";
-import { MemberRole } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import { MemberRole } from "@prisma/client";
+import { db } from "@/lib/db";
 import { v4 } from "uuid";
 
 export async function POST(req: NextRequest) {

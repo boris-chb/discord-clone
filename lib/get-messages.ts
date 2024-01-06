@@ -1,5 +1,5 @@
-import axios from "axios";
 import queryString from "query-string";
+import axios from "axios";
 
 export const getMessages = async (channelId: string, cursor?: string) => {
   const url = queryString.stringifyUrl(
@@ -10,7 +10,7 @@ export const getMessages = async (channelId: string, cursor?: string) => {
         cursor, // this will be undefined if not provided, and queryString will omit it
       },
     },
-    { skipNull: true, skipEmptyString: true }
+    { skipNull: true, skipEmptyString: true },
   );
 
   const { data } = await axios.get(url);

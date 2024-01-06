@@ -1,15 +1,15 @@
-import Sidebar from "@/components/navigation/sidebar";
+import { SocketProvider } from "@/components/providers/socket-provider";
 // import ModalProvider from "@/components/providers/modal-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
-import { cn } from "@/lib/utils";
-import { ClerkProvider } from "@clerk/nextjs";
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { Toaster } from "react-hot-toast";
-import { SocketProvider } from "@/components/providers/socket-provider";
-import dynamic from "next/dynamic";
 import { QueryProvider } from "@/components/providers/query-provider";
+import Sidebar from "@/components/navigation/sidebar";
+import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "react-hot-toast";
+import { Inter } from "next/font/google";
+import type { Metadata } from "next";
+import dynamic from "next/dynamic";
+import { cn } from "@/lib/utils";
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,7 +22,7 @@ const ModalProvider = dynamic(
   () => import("../components/providers/modal-provider"),
   {
     loading: () => <p>Loading...</p>,
-  }
+  },
 );
 
 // export const runtime = "edge";
@@ -35,7 +35,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <SocketProvider>
-        <html suppressHydrationWarning className="dark" lang="en">
+        <html suppressHydrationWarning lang="en">
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
@@ -44,7 +44,6 @@ export default function RootLayout({
             <body className={`${inter.className}`}>
               <Toaster />
               <ModalProvider />
-
               <div className="h-full flex">
                 <Sidebar />
                 <main className="h-full w-full">{children}</main>

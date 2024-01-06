@@ -1,7 +1,7 @@
-import Sidebar from "@/components/navigation/sidebar";
-import ServerSidebar from "@/components/server/server-sidebar";
-import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import ServerSidebar from "@/components/server/server-sidebar";
+import Sidebar from "@/components/navigation/sidebar";
+import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 
 interface MobileSidebarProps {

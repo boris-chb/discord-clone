@@ -1,11 +1,11 @@
 import { getCurrentProfile } from "@/lib/current-profile";
-import { db } from "@/lib/db";
-import { MemberRole } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import { MemberRole } from "@prisma/client";
+import { db } from "@/lib/db";
 
 export async function PATCH(
   req: NextRequest,
-  { params: { channelId } }: { params: { channelId: string } }
+  { params: { channelId } }: { params: { channelId: string } },
 ) {
   try {
     const { searchParams } = new URL(req.url);
@@ -57,7 +57,7 @@ export async function PATCH(
 
 export async function DELETE(
   req: NextRequest,
-  { params: { channelId } }: { params: { channelId: string } }
+  { params: { channelId } }: { params: { channelId: string } },
 ) {
   try {
     const { searchParams } = new URL(req.url);

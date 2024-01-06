@@ -17,6 +17,7 @@ interface ModalData {
   server?: Server;
   channelType?: ChannelType;
   channel?: Channel;
+  messageId?: string;
 }
 
 interface ModalStore {
@@ -27,7 +28,7 @@ interface ModalStore {
   onClose: () => void;
 }
 
-export const useModal = create<ModalStore>((set) => ({
+export const useModal = create<ModalStore>(set => ({
   type: null,
   data: {},
   isOpen: false,

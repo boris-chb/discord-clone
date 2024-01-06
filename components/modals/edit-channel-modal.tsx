@@ -1,6 +1,6 @@
 "use client";
-import axios from "axios";
 import { useEffect } from "react";
+import axios from "axios";
 import * as z from "zod";
 
 import {
@@ -32,12 +32,12 @@ import {
 
 import { Input } from "@/components/ui/input";
 
-import { useModal } from "@/hooks/use-modal-store";
-import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useModal } from "@/hooks/use-modal-store";
 import { ChannelType } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { cn } from "@/lib/utils";
 
 import queryString from "query-string";
 
@@ -125,7 +125,7 @@ export default function EditChannelModal() {
                       <Input
                         className={cn(
                           "focus-visible:ring-0 focus-visible:ring-offset-0",
-                          fieldState.invalid && "border border-red-800"
+                          fieldState.invalid && "border border-red-800",
                         )}
                         disabled={isLoading}
                         placeholder="Choose a name for your channel"

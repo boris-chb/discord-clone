@@ -13,7 +13,7 @@ export default function SocketStatus({}: SocketStatusProps) {
     <Badge
       className={cn(
         "bg-yellow-600 text-white border-none",
-        isConnected && "bg-emerald-600"
+        isConnected && "bg-emerald-600",
       )}
       variant="outline"
     >

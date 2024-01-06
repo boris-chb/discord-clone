@@ -1,18 +1,17 @@
 "use client";
 
-import { useSocket } from "@/components/providers/socket-provider";
-import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { useChatStore } from "@/state/store";
+import { useSocket } from "@/components/providers/socket-provider";
+import { ArrowRightCircle, Plus, Smile } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Member, Profile } from "@prisma/client";
-import axios from "axios";
-import { ArrowRightCircle, Plus, Smile } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useChatStore } from "@/state/store";
 import { useParams } from "next/navigation";
-import queryString from "query-string";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import queryString from "query-string";
+import axios from "axios";
 import { v4 } from "uuid";
 import * as z from "zod";
 

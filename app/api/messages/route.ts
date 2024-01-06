@@ -1,10 +1,25 @@
-import { getCurrentProfile } from "@/lib/current-profile";
 import { getCurrentProfileServer } from "@/lib/current-profile-server";
-import { db } from "@/lib/db";
-import { Message } from "@prisma/client";
+import { getCurrentProfile } from "@/lib/current-profile";
 import { NextRequest, NextResponse } from "next/server";
+import { MemberRole, Message } from "@prisma/client";
+import { revalidatePath } from "next/cache";
+import { db } from "@/lib/db";
 
 const MESSAGES_BATCH = 10;
+
+type CheckMissingParam = (
+  param: unknown,
+  paramName: string,
+) => NextResponse | undefined;
+
+const checkMissingParam: CheckMissingParam = (param, paramName) => {
+  if (!param) {
+    return NextResponse.json(
+      { error: `${paramName} missing` },
+      { status: 400 },
+    );
+  }
+};
 
 export async function GET(req: NextRequest) {
   try {
@@ -73,66 +88,54 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    console.time(`\n${"-".repeat(10)}\nsendMessage\n${"-".repeat(10)}`);
+
     // {channelId => '123', serverId => '234'}
     console.log(req.nextUrl.searchParams);
     const serverId = req.nextUrl.searchParams.get("serverId");
     const channelId = req.nextUrl.searchParams.get("channelId");
-    const profile = await getCurrentProfileServer(req);
     const { fileUrl, body: messageBody } = await req.json();
+    const profile = await getCurrentProfileServer(req);
 
-    if (!profile) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    checkMissingParam(profile, "Profile");
 
-    if (!serverId) {
-      return NextResponse.json({ error: "Server ID missing" }, { status: 400 });
-    }
+    checkMissingParam(serverId, "Server ID");
 
-    if (!channelId) {
-      return NextResponse.json(
-        { error: "Channel ID missing" },
-        { status: 400 }
-      );
-    }
+    checkMissingParam(channelId, "Server ID");
 
-    if (!messageBody) {
-      return NextResponse.json(
-        { error: "Message body missing" },
-        { status: 400 }
-      );
-    }
+    checkMissingParam(messageBody, "Message Body");
 
-    const server = await db.server.findFirst({
-      where: {
-        id: serverId as string,
-        members: {
-          some: {
-            profileId: profile.id,
+    const [server, channel] = await Promise.all([
+      db.server.findFirst({
+        where: {
+          id: serverId as string,
+          members: {
+            some: {
+              profileId: profile!.id,
+            },
           },
         },
-      },
-      include: {
-        members: true,
-      },
-    });
+        include: {
+          members: true,
+        },
+      }),
+      db.channel.findFirst({
+        where: {
+          id: channelId as string,
+          serverId: serverId as string,
+        },
+      }),
+    ]);
 
-    if (!server) {
-      return NextResponse.json({ error: "Server not found" }, { status: 404 });
-    }
-
-    const channel = await db.channel.findFirst({
-      where: {
-        id: channelId as string,
-        serverId: serverId as string,
-      },
-    });
-
-    if (!channel) {
-      return NextResponse.json({ error: "Channel not found" }, { status: 404 });
+    if (!server || !channel) {
+      return NextResponse.json(
+        { error: "Server or Channel not found" },
+        { status: 404 },
+      );
     }
 
     const member = server.members.find(
-      (member) => member.profileId === profile.id
+      member => member.profileId === profile!.id,
     );
 
     if (!member) {
@@ -156,9 +159,115 @@ export async function POST(req: NextRequest) {
     });
 
     // const channelKey = `chat:${channelId}:messages`;
-
+    console.timeEnd(`\n${"-".repeat(10)}\nsendMessage\n${"-".repeat(10)}`);
     return NextResponse.json(message, { status: 200 });
   } catch (error) {
     console.log("Could store message in db\n", error);
   }
+}
+
+export async function PATCH(req: NextRequest) {
+  const { body } = await req.json();
+  const { searchParams } = new URL(req.url);
+  const messageId = searchParams.get("messageId") as string;
+  const serverId = searchParams.get("serverId") as string;
+
+  try {
+    const profile = await getCurrentProfileServer(req);
+
+    if (!profile) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const member = await db.member.findFirst({
+      where: {
+        profileId: profile.id,
+        serverId,
+      },
+    });
+
+    console.log(member?.profileId);
+    console.log(profile.id);
+
+    if (member?.profileId !== profile.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const updatedMsg = await db.message.update({
+      data: {
+        body,
+      },
+      where: {
+        id: messageId,
+      },
+    });
+
+    return NextResponse.json({ updatedMsg }, { status: 200 });
+  } catch (e) {
+    console.log(
+      `\n\n[PATCH] /api/message\n messageId=${messageId}\nserverId=${serverId}\n\n`,
+      e,
+    );
+    return NextResponse.json(
+      {
+        messageId,
+        serverId,
+      },
+      { status: 500 },
+    );
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const messageId = searchParams.get("messageId") as string;
+  const serverId = searchParams.get("serverId") as string;
+
+  try {
+    const profile = await getCurrentProfileServer(req);
+
+    if (!profile) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const member = await db.member.findFirst({
+      where: {
+        profileId: profile.id,
+        serverId,
+      },
+    });
+
+    if (!member) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    if (
+      member.role !== MemberRole.Admin &&
+      member.role !== MemberRole.Moderator
+    ) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const foundMsg = await db.message.delete({
+      where: {
+        id: messageId as string,
+      },
+    });
+
+    return NextResponse.json({ foundMsg }, { status: 200 });
+  } catch (e) {
+    console.log(
+      `\n\n[DELETE] /api/message\n messageId=${messageId}\nserverId=${serverId}\n\n`,
+      e,
+    );
+    return NextResponse.json(
+      {
+        messageId,
+        serverId,
+      },
+      { status: 500 },
+    );
+  }
+
+  // return { status: 400 };
 }

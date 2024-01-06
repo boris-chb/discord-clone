@@ -1,7 +1,7 @@
 import { getCurrentProfileServer } from "@/lib/current-profile-server";
-import { db } from "@/lib/db";
-import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
+import { db } from "@/lib/db";
 
 export async function GET(req: NextRequest) {
   console.log(req);

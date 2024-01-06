@@ -1,9 +1,9 @@
-import MobileSidebar from "@/components/mobile-toggle";
 import ServerSidebar from "@/components/server/server-sidebar";
 import { getCurrentProfile } from "@/lib/current-profile";
-import { db } from "@/lib/db";
+import MobileSidebar from "@/components/mobile-toggle";
 import { redirectToSignIn } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
+import { db } from "@/lib/db";
 
 interface ServerLayoutProps {
   children: React.ReactNode;

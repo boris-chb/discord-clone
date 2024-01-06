@@ -23,9 +23,6 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import UserAvatar from "@/components/user-avatar";
 
-import { useModal } from "@/hooks/use-modal-store";
-import { MemberRole } from "@prisma/client";
-import axios from "axios";
 import {
   Check,
   Loader2,
@@ -36,9 +33,12 @@ import {
   ShieldQuestion,
   UserX,
 } from "lucide-react";
+import { useModal } from "@/hooks/use-modal-store";
 import { useRouter } from "next/navigation";
-import qs from "query-string";
+import { MemberRole } from "@prisma/client";
 import { useEffect, useState } from "react";
+import qs from "query-string";
+import axios from "axios";
 
 const roleIconMap = {
   Guest: null,
@@ -109,7 +109,7 @@ export default function ManageMembersModal() {
         <ScrollArea className="mt-8 max-h-[420px] pr-6">
           {server.members &&
             server.members.length > 0 &&
-            server.members.map((member) => (
+            server.members.map(member => (
               <div key={member.id} className="flex items-center gap-x-2 mb-6">
                 <UserAvatar src={member.profile.imageUrl} />
                 <div className="flex flex-col gap-1">

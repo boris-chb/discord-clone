@@ -1,19 +1,14 @@
-import MessageEditForm from "@/components/chat/message-edit-form";
-import ActionTooltip from "@/components/navigation/sidebar-tooltip";
-import UserAvatar from "@/components/user-avatar";
-import { useModal } from "@/hooks/use-modal-store";
-import { cn } from "@/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Member, MemberRole, Profile } from "@prisma/client";
-import axios from "axios";
 import { Edit, ShieldAlert, ShieldCheck, Trash } from "lucide-react";
-import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
-import queryString from "query-string";
+import ActionTooltip from "@/components/navigation/sidebar-tooltip";
+import MessageEditForm from "@/components/chat/message-edit-form";
+import { Member, MemberRole } from "@prisma/client";
+import { useModal } from "@/hooks/use-modal-store";
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import UserAvatar from "@/components/user-avatar";
+import { useParams } from "next/navigation";
 import { format } from "date-fns";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface MessageProps
   extends React.HTMLAttributes<HTMLDivElement>,
@@ -33,12 +28,12 @@ const FIRST_USER_MESSAGE_DATE_FORMAT = "dd/MM/yyyy HH:mm";
 export default function Message({
   currentMember,
   message: {
+    id,
     body,
     channelId,
     createdAt,
     deleted,
     fileUrl,
-    id,
     member,
     memberId,
     updatedAt,
@@ -64,7 +59,8 @@ export default function Message({
   const isAdmin = currentMember.role === MemberRole.Admin;
   const isModerator = currentMember.role === MemberRole.Moderator;
   const isOwner = currentMember.id === member.id;
-  const canDeleteMessage = !deleted && isOwner && !fileUrl;
+  const canDeleteMessage =
+    !deleted && !fileUrl && (isOwner || isAdmin || isModerator);
   const canEditMessage = !deleted && isOwner && !fileUrl;
   const isPDF = fileType === "pdf" && fileUrl;
   const isImage = !isPDF && fileUrl;
@@ -104,7 +100,7 @@ export default function Message({
               {format(new Date(createdAt), FIRST_USER_MESSAGE_DATE_FORMAT)}
             </time>
             {canDeleteMessage && (
-              <div className="hidden group-hover:flex items-center ml-4 gap-x-2 p-1 bg-white dark:bg-zinc-800 border rounded-sm">
+              <div className="hidden group-hover:flex items-center gap-x-2 p-1 bg-white dark:bg-zinc-800 border rounded-sm">
                 {canEditMessage && (
                   <ActionTooltip label="Edit">
                     <Edit
@@ -115,7 +111,11 @@ export default function Message({
                 )}
                 <ActionTooltip label="Delete">
                   <Trash
-                    onClick={() => onOpen("deleteMessage", {})}
+                    onClick={() =>
+                      onOpen("deleteMessage", {
+                        messageId: id,
+                      })
+                    }
                     className="cursor-pointer ml-auto h-4 w-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
                   />
                 </ActionTooltip>
@@ -129,7 +129,7 @@ export default function Message({
               className={cn(
                 "text-sm text-zinc-600 dark:text-zinc-300",
                 deleted &&
-                  "italic text-zinc-500 dark:text-zinc-400 text-xs mt-1"
+                  "italic text-zinc-500 dark:text-zinc-400 text-xs mt-1",
               )}
             >
               {body}
@@ -173,7 +173,7 @@ export function MessageFollowUp({
         <p
           className={cn(
             "text-sm text-zinc-600 dark:text-zinc-300",
-            deleted && "italic text-zinc-500 dark:text-zinc-400 text-xs"
+            deleted && "italic text-zinc-500 dark:text-zinc-400 text-xs",
           )}
         >
           {body}

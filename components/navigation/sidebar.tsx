@@ -1,13 +1,13 @@
 import SidebarItem from "@/components/navigation/sidebar-item";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
+import { RedirectToSignIn, UserButton } from "@clerk/nextjs";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { getCurrentProfile } from "@/lib/current-profile";
-import { db } from "@/lib/db";
-import { RedirectToSignIn, UserButton } from "@clerk/nextjs";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 import SidebarAction from "./sidebar-action";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { db } from "@/lib/db";
+import Link from "next/link";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -42,14 +42,14 @@ const Sidebar: React.FC<SidebarProps> = async ({ className }) => {
     <nav
       className={cn(
         "space-y-4 py-3 md:flex flex-col items-center h-full text-primary  dark:bg-zinc-950 bg-zinc-200 hidden w-18",
-        className && className
+        className && className,
       )}
     >
       <SidebarAction />
       <Separator className="w-3/4 bg-zinc-300 dark:bg-zinc-700 mx-auto" />
       <ScrollArea className="flex-1 w-full h-full my-3">
         <div className="flex flex-col gap-3">
-          {servers.map((server) => (
+          {servers.map(server => (
             <Link
               key={server.id}
               href={`/${server.id}/${server?.channels[0].id}`}

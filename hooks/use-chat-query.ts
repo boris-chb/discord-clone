@@ -1,6 +1,6 @@
 import { useSocket } from "@/components/providers/socket-provider";
-import queryString from "query-string";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import queryString from "query-string";
 
 interface ChatQueryProps {
   queryKey: string;
@@ -30,7 +30,7 @@ export const useChatQuery = ({
           [paramKey]: paramValue, // ?channelId={channelId}
         },
       },
-      { skipNull: true }
+      { skipNull: true },
     );
 
     const res = await fetch(url);

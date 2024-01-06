@@ -1,10 +1,10 @@
 "use client";
 
-import { getCurrentProfile } from "@/lib/current-profile";
-import { useUser } from "@clerk/nextjs";
-import { useParams } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
+import { getCurrentProfile } from "@/lib/current-profile";
 import { Socket, io } from "socket.io-client";
+import { useParams } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 
 type SocketContext = {
   socket: Socket | null;

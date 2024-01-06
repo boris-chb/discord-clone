@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,23 +8,29 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
+import { useChat } from "@livekit/components-react";
 import { useModal } from "@/hooks/use-modal-store";
+import { useChatStore } from "@/state/store";
 import axios from "axios";
 
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { NextResponse } from "next/server";
 import queryString from "query-string";
 import { useState } from "react";
 
 export default function DeleteMessageModal() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { serverId, channelId } = useParams();
+  const { messages, setMessages } = useChatStore();
 
   const {
     isOpen,
     onClose,
     type,
-    data: { server, channel },
+    data: { messageId },
   } = useModal();
 
   const isModalOpen = isOpen && type === "deleteMessage";
@@ -35,15 +40,19 @@ export default function DeleteMessageModal() {
       setIsLoading(true);
 
       const url = queryString.stringifyUrl({
-        url: `/api/messages/${channel?.id}`,
-        query: { serverId: server?.id },
+        url: `/api/messages/`,
+        query: { messageId, serverId },
       });
 
-      // await axios.delete(url);
+      console.log(url);
+
+      const res = await axios.delete(url);
+      console.log(res.data);
+      setMessages(messages.filter(msg => msg.id !== res.data.foundMsg.id));
 
       onClose();
     } catch (error) {
-      console.log(`could not delete message`, error);
+      console.log(error);
     } finally {
       setIsLoading(false);
     }

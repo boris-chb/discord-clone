@@ -1,11 +1,11 @@
+import { RedirectToSignIn, currentUser } from "@clerk/nextjs";
+import ChatMessages from "@/components/chat/chat-messages";
+import { getCurrentProfile } from "@/lib/current-profile";
 import ChatHeader from "@/components/chat/chat-header";
 import ChatInput from "@/components/chat/chat-input";
-import ChatMessages from "@/components/chat/chat-messages";
 import MediaRoom from "@/components/media-room";
 import { getOrCreateChat } from "@/lib/chat";
-import { getCurrentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
-import { RedirectToSignIn, currentUser } from "@clerk/nextjs";
 
 interface ChatProps {
   params: {

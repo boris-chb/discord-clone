@@ -1,13 +1,13 @@
+import ChatMessages from "@/components/chat/chat-messages";
+import { getCurrentProfile } from "@/lib/current-profile";
 import ChatHeader from "@/components/chat/chat-header";
 import ChatInput from "@/components/chat/chat-input";
-import ChatMessages from "@/components/chat/chat-messages";
-import MediaRoom from "@/components/media-room";
-import { getCurrentProfile } from "@/lib/current-profile";
-import { db } from "@/lib/db";
 import { getMessages } from "@/lib/get-messages";
-import { Message } from "@prisma/client";
-import axios from "axios";
+import MediaRoom from "@/components/media-room";
 import { redirect } from "next/navigation";
+import { Message } from "@prisma/client";
+import { db } from "@/lib/db";
+import axios from "axios";
 
 interface ChannelProps {
   params: {
@@ -16,6 +16,8 @@ interface ChannelProps {
   };
   searchParams: any;
 }
+
+export const revalidate = 0;
 
 export default async function ChannelPage({
   params: { channelId, serverId },

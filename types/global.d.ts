@@ -5,9 +5,9 @@ import {
   Message as _Message,
   DirectMessage as _DirectMessage,
 } from "@prisma/client";
+import { Server as SocketIOServer } from "socket.io";
 import { Socket, Server as NetServer } from "net";
 import { NextApiResponse } from "next";
-import { Server as SocketIOServer } from "socket.io";
 declare global {
   type ServerWithMembersWithProfiles = _Server & {
     members: (Member & { profile: Profile })[];

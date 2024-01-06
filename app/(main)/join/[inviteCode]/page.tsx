@@ -1,7 +1,7 @@
 import { getCurrentProfile } from "@/lib/current-profile";
-import { db } from "@/lib/db";
 import { RedirectToSignIn } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
+import { db } from "@/lib/db";
 
 interface InvitePageProps {
   params: {
